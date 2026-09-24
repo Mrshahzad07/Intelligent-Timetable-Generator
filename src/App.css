@@ -83,27 +83,30 @@
 .navbar-center {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  flex-shrink: 1;
+  gap: 0.65rem;
+  flex-shrink: 0;
   min-width: 0;
 }
 
 .preset-selector-wrapper {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  background: rgba(30, 41, 59, 0.6);
-  padding: 0.3rem 0.65rem;
+  gap: 0.45rem;
+  background: rgba(30, 41, 59, 0.7);
+  padding: 0.32rem 0.65rem;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-subtle);
+  flex-shrink: 1;
   min-width: 0;
+  max-width: 280px;
 }
 
 .preset-label {
   font-size: 0.75rem;
   color: var(--text-muted);
-  font-weight: 600;
+  font-weight: 700;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .preset-select {
@@ -114,8 +117,12 @@
   font-weight: 600;
   outline: none;
   cursor: pointer;
-  max-width: 250px;
+  max-width: 200px;
+  min-width: 60px;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: block;
 }
 
 .preset-select option {
@@ -4467,7 +4474,7 @@
 /* =========================================
    9. RESPONSIVE BREAKPOINTS & SCREEN RATIO
    ========================================= */
-@media (max-width: 1420px) {
+@media (max-width: 1650px) {
   .brand-subtitle {
     display: none;
   }
@@ -4484,7 +4491,30 @@
     display: inline;
   }
   .preset-select {
-    max-width: 190px;
+    max-width: 170px;
+  }
+}
+
+@media (max-width: 1250px) {
+  .navbar-container {
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+  .navbar-center {
+    order: 3;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 0.25rem;
+  }
+  .preset-selector-wrapper {
+    max-width: none;
+    flex: 1;
+  }
+  .preset-select {
+    max-width: none;
+  }
+  .stats-dashboard-bar {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   }
 }
 
@@ -4497,24 +4527,6 @@
   }
   .pane-hidden-mobile {
     display: none !important;
-  }
-}
-
-@media (max-width: 1200px) {
-  .navbar-container {
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-  .navbar-center {
-    order: 3;
-    width: 100%;
-    justify-content: space-between;
-  }
-  .preset-select {
-    max-width: 280px;
-  }
-  .stats-dashboard-bar {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   }
 }
 
