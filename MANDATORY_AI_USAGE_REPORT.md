@@ -3,6 +3,12 @@
 **AI TOOL USED:**  
 Gemini / Antigravity IDE
 
+**LIVE DEMO URL:**  
+[https://aigeneratortime-table.netlify.app/](https://aigeneratortime-table.netlify.app/)
+
+**GITHUB REPOSITORY:**  
+[https://github.com/Mrshahzad07/Intelligent-Timetable-Generator](https://github.com/Mrshahzad07/Intelligent-Timetable-Generator)
+
 ---
 
 ### WHAT I ASKED AI TO DO:

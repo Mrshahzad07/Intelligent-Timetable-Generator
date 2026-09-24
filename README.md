@@ -3,6 +3,13 @@
 > **Assignment 3 — Intelligent Timetable Generator**  
 > An autonomous, constraint-aware academic scheduling platform that solves high-dimensional timetable generation across multiple divisions, faculty members, subjects, classrooms, and time slots while detecting and diagnosing mathematically impossible or conflicting constraints. Powered by a dual-engine architecture: a deterministic Constraint Satisfaction Problem (CSP) solver and an evolutionary Genetic Algorithm (GA) optimizer, paired with a natural language AI scheduling agent.
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://aigeneratortime-table.netlify.app/)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Mrshahzad07/Intelligent-Timetable-Generator)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+
+🌐 **Live Production Deployment**: [https://aigeneratortime-table.netlify.app/](https://aigeneratortime-table.netlify.app/)  
+📦 **GitHub Repository**: [https://github.com/Mrshahzad07/Intelligent-Timetable-Generator](https://github.com/Mrshahzad07/Intelligent-Timetable-Generator)
+
 ---
 
 ## 1. Executive Summary & Business Problem
@@ -178,9 +185,13 @@ When impossible constraints are detected:
 
 ---
 
-## 6. How to Run Locally
+## 6. Live Deployment & How to Run Locally
 
-### Prerequisites
+### 🌐 Live Production Deployment
+Experience the application directly in your browser without any installation:  
+👉 **[https://aigeneratortime-table.netlify.app/](https://aigeneratortime-table.netlify.app/)**
+
+### Prerequisites (For Local Development)
 - Node.js (v18 or higher recommended; tested on v22.19)
 - npm (v9 or higher)
 
