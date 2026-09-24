@@ -202,3 +202,9 @@ To stand out among all submissions, ChronosAI introduces unique production-grade
      - **Section 4**: Three-Tier Official Sign-Off Block (Timetable Coordinator, HOD CSE, and Dean/Principal seal).
    - Hardened `@media print` CSS engine: produces pixel-perfect, clean black/white landscape sheets on physical paper or PDF with zero UI clutter.
 
+6. **Autonomous AI Scheduling Agent & Genetic Evolutionary Optimizer**:
+   - **Zero Static Dummy Data Lock-in**: Users can start with a 100% clean canvas, enter real institutional data, or prompt the AI Agent.
+   - **Natural Language AI Prompt**: Administrators can describe or paste their department curriculum text; the AI Agent automatically extracts cohorts, classrooms, laboratories, professors, weekly hours, and practical sessions.
+   - **Step-by-Step AI Interview**: 5-step conversational setup wizard that asks for Department details, Divisions, Rooms, Faculty limits, and Course allocations with instant feasibility checks.
+   - **Genetic Algorithm (GA) Evolutionary Engine (`src/solver/geneticAlgorithmSolver.js`)**: Runs generational chromosome mutations and selection to evolve the schedule dynamically, optimizing soft constraints in real time with live UI evolutionary toasts.
+
