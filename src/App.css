@@ -831,9 +831,8 @@
 }
 
 .th-day {
-  width: 85px;
-  min-width: 80px;
-  max-width: 90px;
+  width: 105px !important;
+  min-width: 100px !important;
   text-align: center;
   position: sticky;
   left: 0;
@@ -895,6 +894,8 @@
 }
 
 .td-day-label {
+  width: 105px !important;
+  min-width: 100px !important;
   background: rgba(15, 23, 42, 0.95) !important;
   text-align: center;
   vertical-align: middle !important;
@@ -905,6 +906,7 @@
   left: 0;
   z-index: 10;
   box-shadow: 2px 0 6px rgba(0, 0, 0, 0.4);
+  white-space: nowrap !important;
 }
 
 .td-break-cell {
@@ -4072,8 +4074,10 @@
 }
 
 .pth-day {
-  width: 65px;
+  width: 95px !important;
+  min-width: 95px !important;
   background: #e2e8f0 !important;
+  text-align: center;
 }
 
 .pth-period {
@@ -4096,7 +4100,8 @@
 }
 
 .pth-break {
-  width: 58px;
+  width: 74px !important;
+  min-width: 74px !important;
   background: #fef3c7 !important;
   color: #92400e !important;
   border-left: 2px solid #d97706 !important;
@@ -4114,48 +4119,78 @@
 }
 
 .ptd-day-label {
+  width: 95px !important;
+  min-width: 95px !important;
   background: #f1f5f9 !important;
   text-align: center;
   vertical-align: middle !important;
   font-weight: 800;
   color: #0f172a;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   border-right: 1.5px solid #0f172a !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  padding: 4px 6px !important;
+}
+
+.day-name-wrapper {
+  display: block;
+  white-space: nowrap;
+  overflow: visible;
+  letter-spacing: 0.03em;
 }
 
 .ptd-break-cell {
+  width: 74px !important;
+  min-width: 74px !important;
   background: #fffbeb !important;
   text-align: center;
   vertical-align: middle !important;
   border-left: 2px solid #d97706 !important;
   border-right: 2px solid #d97706 !important;
-  padding: 2px !important;
+  padding: 2px 1px !important;
+  box-sizing: border-box;
 }
 
-.ptd-break-wrapper {
+.ptd-break-box {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
   height: 100%;
+  min-height: 48px;
+  gap: 1px;
+  padding: 2px 1px;
+  box-sizing: border-box;
 }
 
-.break-icon {
-  font-size: 0.75rem;
-  line-height: 1;
-}
-
-.break-text-vert {
-  font-size: 0.54rem;
+.break-title-badge {
+  font-size: 0.66rem;
   font-weight: 800;
   color: #92400e;
-  letter-spacing: 0.06em;
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  transform: rotate(180deg);
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+  text-transform: uppercase;
   white-space: nowrap;
-  margin: 0 auto;
+}
+
+.break-sub-badge {
+  font-size: 0.56rem;
+  font-weight: 800;
+  color: #b45309;
+  letter-spacing: 0.06em;
+  line-height: 1.1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.break-time-badge {
+  font-size: 0.52rem;
+  font-family: var(--font-mono);
+  color: #78350f;
+  margin-top: 2px;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .ptd-empty-cell {

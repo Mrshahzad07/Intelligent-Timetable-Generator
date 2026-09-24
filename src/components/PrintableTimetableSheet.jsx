@@ -106,6 +106,14 @@ export default function PrintableTimetableSheet({
     }).filter(item => item.subject);
   };
 
+  const getVenueCode = (rm) => {
+    if (!rm) return 'Venue TBD';
+    if (rm.name.includes('(')) {
+      return rm.name.split('(')[0].trim();
+    }
+    return rm.name;
+  };
+
   // Render a single division sheet
   const renderDivisionTable = (div) => {
     const activeSubjects = getActiveSubjects(div.id);
@@ -182,15 +190,16 @@ export default function PrintableTimetableSheet({
               {config.days.map(day => (
                 <tr key={day}>
                   <td className="ptd-day-label">
-                    <strong>{day.toUpperCase()}</strong>
+                    <div className="day-name-wrapper">{day.toUpperCase()}</div>
                   </td>
                   {config.periods.map(p => {
                     if (p.isBreak) {
                       return (
                         <td key={p.index} className="ptd-break-cell">
-                          <div className="ptd-break-wrapper">
-                            <span className="break-icon">☕</span>
-                            <span className="break-text-vert">LUNCH RECESS</span>
+                          <div className="ptd-break-box">
+                            <span className="break-title-badge">LUNCH</span>
+                            <span className="break-sub-badge">BREAK</span>
+                            <span className="break-time-badge">{p.time}</span>
                           </div>
                         </td>
                       );
@@ -216,10 +225,10 @@ export default function PrintableTimetableSheet({
                       return (
                         <td key={p.index} className="ptd-slot-cell ptd-lab-contd">
                           <div className="ptd-contd-box">
-                            <div className="contd-badge">↳ LAB CONTINUATION</div>
+                            <span className="contd-badge">↳ LAB CONTINUED</span>
                             <div className="contd-code">{sub?.code}</div>
                             <div className="contd-title" title={sub?.name}>{sub?.name}</div>
-                            <div className="contd-loc">📍 {rm?.name}</div>
+                            <div className="contd-loc">📍 {getVenueCode(rm)}</div>
                           </div>
                         </td>
                       );
@@ -242,7 +251,7 @@ export default function PrintableTimetableSheet({
                               <span className="info-icon">👤</span> {fac?.name || 'Unassigned Faculty'}
                             </div>
                             <div className="ptd-room-name" title={rm?.name}>
-                              <span className="info-icon">📍</span> {rm?.name || 'Hall TBD'}
+                              <span className="info-icon">📍</span> {getVenueCode(rm)}
                             </div>
                           </div>
                         </div>
@@ -456,15 +465,16 @@ export default function PrintableTimetableSheet({
               {config.days.map(day => (
                 <tr key={day}>
                   <td className="ptd-day-label">
-                    <strong>{day.toUpperCase()}</strong>
+                    <div className="day-name-wrapper">{day.toUpperCase()}</div>
                   </td>
                   {config.periods.map(p => {
                     if (p.isBreak) {
                       return (
                         <td key={p.index} className="ptd-break-cell">
-                          <div className="ptd-break-wrapper">
-                            <span className="break-icon">☕</span>
-                            <span className="break-text-vert">LUNCH RECESS</span>
+                          <div className="ptd-break-box">
+                            <span className="break-title-badge">LUNCH</span>
+                            <span className="break-sub-badge">BREAK</span>
+                            <span className="break-time-badge">{p.time}</span>
                           </div>
                         </td>
                       );
@@ -496,7 +506,7 @@ export default function PrintableTimetableSheet({
                           <div className="ptd-subject-name" title={sub?.name}>{sub?.name}</div>
                           <div className="ptd-footer-info">
                             <div className="ptd-room-name">
-                              <span className="info-icon">📍</span> {rm?.name || 'Hall TBD'}
+                              <span className="info-icon">📍</span> {getVenueCode(rm)}
                             </div>
                           </div>
                         </div>
