@@ -188,8 +188,9 @@ export default function PrintableTimetableSheet({
                     if (p.isBreak) {
                       return (
                         <td key={p.index} className="ptd-break-cell">
-                          <div className="ptd-break-text">
-                            <span>LUNCH / RECESS</span>
+                          <div className="ptd-break-wrapper">
+                            <span className="break-icon">☕</span>
+                            <span className="break-text-vert">LUNCH RECESS</span>
                           </div>
                         </td>
                       );
@@ -215,9 +216,10 @@ export default function PrintableTimetableSheet({
                       return (
                         <td key={p.index} className="ptd-slot-cell ptd-lab-contd">
                           <div className="ptd-contd-box">
-                            <span className="contd-badge">LAB CONTINUED</span>
-                            <span className="contd-title">{sub?.code}: {sub?.name}</span>
-                            <span className="contd-loc">{rm?.name}</span>
+                            <div className="contd-badge">↳ LAB CONTINUATION</div>
+                            <div className="contd-code">{sub?.code}</div>
+                            <div className="contd-title" title={sub?.name}>{sub?.name}</div>
+                            <div className="contd-loc">📍 {rm?.name}</div>
                           </div>
                         </td>
                       );
@@ -228,15 +230,19 @@ export default function PrintableTimetableSheet({
                         <div className="ptd-cell-content">
                           <div className="ptd-code-row">
                             <span className="ptd-code-pill">{sub?.code || 'SUB'}</span>
-                            <span className="ptd-type-pill">{isLab ? 'PRACTICAL (2H)' : 'THEORY'}</span>
+                            <span className={`ptd-type-pill ${isLab ? 'type-lab' : 'type-theory'}`}>
+                              {isLab ? 'LAB (2H)' : 'THEORY'}
+                            </span>
                           </div>
-                          <div className="ptd-subject-name">{sub?.name || 'Class Session'}</div>
+                          <div className="ptd-subject-name" title={sub?.name}>
+                            {sub?.name || 'Class Session'}
+                          </div>
                           <div className="ptd-footer-info">
-                            <div className="ptd-fac-name">
-                              <span className="fac-icon">👤</span> {fac?.name || 'Unassigned Faculty'}
+                            <div className="ptd-fac-name" title={fac?.name}>
+                              <span className="info-icon">👤</span> {fac?.name || 'Unassigned Faculty'}
                             </div>
-                            <div className="ptd-room-name">
-                              <span className="rm-icon">📍</span> {rm?.name || 'Hall TBD'}
+                            <div className="ptd-room-name" title={rm?.name}>
+                              <span className="info-icon">📍</span> {rm?.name || 'Hall TBD'}
                             </div>
                           </div>
                         </div>
@@ -456,8 +462,9 @@ export default function PrintableTimetableSheet({
                     if (p.isBreak) {
                       return (
                         <td key={p.index} className="ptd-break-cell">
-                          <div className="ptd-break-text">
-                            <span>LUNCH / RECESS</span>
+                          <div className="ptd-break-wrapper">
+                            <span className="break-icon">☕</span>
+                            <span className="break-text-vert">LUNCH RECESS</span>
                           </div>
                         </td>
                       );
@@ -484,11 +491,13 @@ export default function PrintableTimetableSheet({
                         <div className="ptd-cell-content">
                           <div className="ptd-code-row">
                             <span className="ptd-code-pill">{sub?.code}</span>
-                            <span className="ptd-div-badge">{div?.shortCode || div?.name}</span>
+                            <span className="ptd-div-badge">{div?.shortCode || 'DIV'}</span>
                           </div>
-                          <div className="ptd-subject-name">{sub?.name}</div>
+                          <div className="ptd-subject-name" title={sub?.name}>{sub?.name}</div>
                           <div className="ptd-footer-info">
-                            <div className="ptd-room-name">📍 {rm?.name}</div>
+                            <div className="ptd-room-name">
+                              <span className="info-icon">📍</span> {rm?.name || 'Hall TBD'}
+                            </div>
                           </div>
                         </div>
                       </td>

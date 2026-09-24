@@ -4048,99 +4048,137 @@
 
 /* 3. Main Matrix Grid */
 .print-table-wrapper {
-  margin-bottom: 0.65rem;
+  margin-bottom: 0.5rem;
+  width: 100%;
 }
 
 .print-timetable-matrix {
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   border: 1.5px solid #0f172a;
+  background: #ffffff;
 }
 
 .print-timetable-matrix th {
-  background: #e2e8f0;
-  border: 1px solid #64748b;
-  padding: 0.35rem 0.25rem;
+  background: #f1f5f9;
+  border: 1px solid #475569;
+  padding: 4px 2px;
   text-align: center;
-  font-weight: 700;
+  font-weight: 800;
   color: #0f172a;
+  box-sizing: border-box;
 }
 
 .pth-day {
-  width: 75px;
-  background: #cbd5e1 !important;
+  width: 65px;
+  background: #e2e8f0 !important;
+}
+
+.pth-period {
+  width: auto;
 }
 
 .pth-title {
-  font-size: 0.72rem;
+  font-size: 0.66rem;
   font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
 }
 
 .pth-time {
-  font-size: 0.62rem;
+  font-size: 0.56rem;
   font-family: var(--font-mono);
-  color: #334155;
+  color: #475569;
+  margin-top: 1px;
+  line-height: 1;
 }
 
 .pth-break {
-  width: 72px;
+  width: 58px;
   background: #fef3c7 !important;
   color: #92400e !important;
+  border-left: 2px solid #d97706 !important;
+  border-right: 2px solid #d97706 !important;
 }
 
 .print-timetable-matrix td {
-  border: 1px solid #94a3b8;
-  padding: 0.25rem;
+  border: 1px solid #64748b;
+  padding: 3px 4px !important;
   vertical-align: top;
-  height: 68px;
+  height: auto;
+  min-height: 54px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .ptd-day-label {
-  background: #f1f5f9;
+  background: #f1f5f9 !important;
   text-align: center;
   vertical-align: middle !important;
   font-weight: 800;
   color: #0f172a;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
+  border-right: 1.5px solid #0f172a !important;
 }
 
 .ptd-break-cell {
-  background: #fffbeb;
+  background: #fffbeb !important;
   text-align: center;
   vertical-align: middle !important;
-  color: #b45309;
-  font-weight: 700;
-  font-size: 0.68rem;
-  border-left: 1.5px solid #d97706;
-  border-right: 1.5px solid #d97706;
+  border-left: 2px solid #d97706 !important;
+  border-right: 2px solid #d97706 !important;
+  padding: 2px !important;
 }
 
-.ptd-break-text {
+.ptd-break-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  height: 100%;
+}
+
+.break-icon {
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.break-text-vert {
+  font-size: 0.54rem;
+  font-weight: 800;
+  color: #92400e;
+  letter-spacing: 0.06em;
   writing-mode: vertical-rl;
   text-orientation: mixed;
   transform: rotate(180deg);
-  letter-spacing: 0.08em;
-  font-size: 0.68rem;
+  white-space: nowrap;
   margin: 0 auto;
 }
 
 .ptd-empty-cell {
-  background: #ffffff;
+  background: #fafafa !important;
   text-align: center;
   vertical-align: middle !important;
-  color: #94a3b8;
+  padding: 4px !important;
 }
 
 .empty-dash {
-  font-size: 1rem;
+  font-size: 0.9rem;
+  color: #94a3b8;
+  line-height: 1;
   display: block;
 }
 
 .empty-sub {
-  font-size: 0.6rem;
+  font-size: 0.55rem;
   color: #94a3b8;
+  font-weight: 500;
+  line-height: 1.1;
+  display: block;
+  margin-top: 1px;
 }
 
 .ptd-slot-cell {
@@ -4152,64 +4190,104 @@
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
-  gap: 0.15rem;
+  min-height: 50px;
+  gap: 1px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .ptd-code-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.2rem;
+  gap: 3px;
+  line-height: 1;
+  margin-bottom: 1px;
 }
 
 .ptd-code-pill {
   font-weight: 800;
-  font-size: 0.68rem;
+  font-size: 0.62rem;
   color: #1e1b4b;
   font-family: var(--font-mono);
   background: #e0e7ff;
-  padding: 0.05rem 0.25rem;
+  padding: 1px 3px;
   border-radius: 2px;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .ptd-div-badge {
-  font-size: 0.6rem;
+  font-size: 0.56rem;
   font-weight: 700;
   color: #1d4ed8;
   background: #dbeafe;
-  padding: 0.05rem 0.25rem;
+  padding: 1px 3px;
   border-radius: 2px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .ptd-type-pill {
-  font-size: 0.58rem;
+  font-size: 0.52rem;
   font-weight: 700;
-  color: #475569;
+  padding: 1px 3px;
+  border-radius: 2px;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+
+.ptd-type-pill.type-theory {
+  color: #1d4ed8;
+  background: #eff6ff;
+}
+
+.ptd-type-pill.type-lab {
+  color: #6b21a8;
+  background: #f3e8ff;
 }
 
 .ptd-subject-name {
   font-weight: 700;
-  font-size: 0.72rem;
+  font-size: 0.64rem;
   color: #0f172a;
   line-height: 1.15;
+  margin: 1px 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
 }
 
 .ptd-footer-info {
   display: flex;
   flex-direction: column;
-  gap: 0.08rem;
-  font-size: 0.64rem;
+  gap: 1px;
+  font-size: 0.56rem;
   color: #334155;
+  margin-top: auto;
+  padding-top: 1px;
+  border-top: 1px dashed rgba(100, 116, 139, 0.3);
 }
 
 .ptd-fac-name, .ptd-room-name {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.15;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.info-icon {
+  font-size: 0.6rem;
+  flex-shrink: 0;
+  line-height: 1;
 }
 
 .ptd-lab-slot {
@@ -4230,52 +4308,71 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   height: 100%;
+  min-height: 50px;
   text-align: center;
-  gap: 0.15rem;
+  gap: 1px;
+  padding: 2px 3px;
+  box-sizing: border-box;
 }
 
 .contd-badge {
-  font-size: 0.58rem;
+  font-size: 0.54rem;
   font-weight: 800;
   color: #6d28d9;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
-.contd-title {
-  font-size: 0.68rem;
-  font-weight: 700;
+.contd-code {
+  font-size: 0.62rem;
+  font-weight: 800;
+  font-family: var(--font-mono);
   color: #3b0764;
 }
 
+.contd-title {
+  font-size: 0.58rem;
+  font-weight: 600;
+  color: #4c1d95;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
 .contd-loc {
-  font-size: 0.62rem;
+  font-size: 0.56rem;
   color: #581c87;
+  font-weight: 600;
 }
 
 /* 4. Customized Bottom Sections */
 .print-section {
   border: 1px solid #cbd5e1;
   border-radius: 4px;
-  padding: 0.45rem 0.6rem;
-  margin-bottom: 0.5rem;
+  padding: 0.35rem 0.5rem;
+  margin-bottom: 0.4rem;
   background: #ffffff;
   page-break-inside: avoid;
 }
 
 .print-section-header {
-  font-size: 0.74rem;
+  font-size: 0.7rem;
   font-weight: 800;
   color: #0f172a;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 0 0 0.35rem 0;
-  padding-bottom: 0.2rem;
+  margin: 0 0 0.25rem 0;
+  padding-bottom: 0.15rem;
   border-bottom: 1px solid #e2e8f0;
 }
 
 .sec-sub {
-  font-size: 0.64rem;
+  font-size: 0.6rem;
   font-weight: 500;
   color: #64748b;
 }
@@ -4283,13 +4380,13 @@
 .print-legend-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.68rem;
+  font-size: 0.64rem;
 }
 
 .print-legend-table th {
   background: #f1f5f9;
   border: 1px solid #cbd5e1;
-  padding: 0.2rem 0.35rem;
+  padding: 0.18rem 0.3rem;
   text-align: left;
   font-weight: 700;
   color: #334155;
@@ -4297,14 +4394,14 @@
 
 .print-legend-table td {
   border: 1px solid #cbd5e1;
-  padding: 0.2rem 0.35rem;
+  padding: 0.18rem 0.3rem;
   color: #0f172a;
 }
 
 .print-badge {
-  font-size: 0.62rem;
+  font-size: 0.58rem;
   font-weight: 700;
-  padding: 0.05rem 0.3rem;
+  padding: 0.05rem 0.25rem;
   border-radius: 3px;
 }
 
@@ -4321,26 +4418,26 @@
 .print-infra-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0.5rem;
-  font-size: 0.66rem;
+  gap: 0.4rem;
+  font-size: 0.62rem;
 }
 
 .print-infra-card {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 3px;
-  padding: 0.25rem 0.4rem;
+  padding: 0.2rem 0.35rem;
   display: flex;
   flex-direction: column;
 }
 
 .print-rules-content {
-  font-size: 0.66rem;
+  font-size: 0.62rem;
   color: #334155;
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
-  line-height: 1.35;
+  gap: 0.15rem;
+  line-height: 1.3;
 }
 
 .print-rules-content p {
@@ -4357,14 +4454,14 @@
 /* 5. Signatures Block */
 .print-signatures-block {
   border: none;
-  padding: 0.4rem 0.25rem 0.2rem 0.25rem;
-  margin-bottom: 0.25rem;
+  padding: 0.3rem 0.25rem 0.15rem 0.25rem;
+  margin-bottom: 0.2rem;
 }
 
 .signatures-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
+  gap: 1.5rem;
   text-align: center;
 }
 
@@ -4377,23 +4474,23 @@
 .sig-line {
   width: 80%;
   border-bottom: 1.5px solid #0f172a;
-  margin-bottom: 0.35rem;
-  height: 28px;
+  margin-bottom: 0.25rem;
+  height: 22px;
 }
 
 .sig-name {
   font-weight: 800;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   color: #0f172a;
 }
 
 .sig-title {
-  font-size: 0.64rem;
+  font-size: 0.6rem;
   color: #475569;
 }
 
 .sig-date {
-  font-size: 0.6rem;
+  font-size: 0.56rem;
   color: #64748b;
   margin-top: 0.1rem;
 }
@@ -4403,11 +4500,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 0.58rem;
+  font-size: 0.55rem;
   color: #64748b;
   border-top: 1px solid #cbd5e1;
-  padding-top: 0.25rem;
-  margin-top: 0.35rem;
+  padding-top: 0.2rem;
+  margin-top: 0.25rem;
 }
 
 /* =========================================
@@ -4416,16 +4513,17 @@
 @media print {
   @page {
     size: A4 landscape;
-    margin: 8mm 10mm 8mm 10mm;
+    margin: 6mm 8mm 6mm 8mm;
   }
 
   html, body {
-    background: white !important;
-    color: black !important;
+    background: #ffffff !important;
+    color: #000000 !important;
     margin: 0 !important;
     padding: 0 !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+    font-size: 10pt;
   }
 
   /* Hide entire interactive Web UI */
@@ -4438,7 +4536,8 @@
   .empty-add-icon,
   .btn,
   .banner-icon,
-  .unallocated-banner {
+  .unallocated-banner,
+  .ai-evolution-toast {
     display: none !important;
   }
 
@@ -4446,28 +4545,40 @@
   .print-sheet-root {
     display: block !important;
     width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   .print-division-sheet {
     page-break-after: always;
-    page-break-inside: avoid;
-    margin-bottom: 0;
+    break-after: page;
+    page-break-inside: auto;
+    break-inside: auto;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .print-division-sheet:last-child {
     page-break-after: auto;
+    break-after: auto;
   }
 
-  .print-section {
+  .print-letterhead,
+  .print-meta-banner,
+  .print-table-wrapper,
+  .print-section,
+  .print-signatures-block,
+  .print-doc-footer {
     page-break-inside: avoid;
+    break-inside: avoid;
   }
 
   .print-timetable-matrix {
     page-break-inside: avoid;
-  }
-
-  .print-signatures-block {
-    page-break-inside: avoid;
+    break-inside: avoid;
   }
 }
 
