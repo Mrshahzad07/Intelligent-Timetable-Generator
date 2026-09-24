@@ -37,13 +37,13 @@ export const DEFAULT_CONFIG = {
   days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
   dayShort: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
   periods: [
-    { index: 1, name: 'Period 1', time: '09:00 - 10:00', isBreak: false },
+    { index: 1, name: 'Period 1', time: '9:00 - 10:00', isBreak: false },
     { index: 2, name: 'Period 2', time: '10:00 - 11:00', isBreak: false },
     { index: 3, name: 'Period 3', time: '11:15 - 12:15', isBreak: false },
-    { index: 4, name: 'Lunch Break', time: '12:15 - 01:15', isBreak: true },
-    { index: 5, name: 'Period 4', time: '01:15 - 02:15', isBreak: false },
-    { index: 6, name: 'Period 5', time: '02:15 - 03:15', isBreak: false },
-    { index: 7, name: 'Period 6', time: '03:15 - 04:15', isBreak: false }
+    { index: 4, name: 'Lunch Break', time: '12:15 - 1:15', isBreak: true },
+    { index: 5, name: 'Period 4', time: '1:15 - 2:15', isBreak: false },
+    { index: 6, name: 'Period 5', time: '2:15 - 3:15', isBreak: false },
+    { index: 7, name: 'Period 6', time: '3:15 - 4:15', isBreak: false }
   ]
 };
 
