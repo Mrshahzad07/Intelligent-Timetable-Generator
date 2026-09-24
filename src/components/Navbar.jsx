@@ -10,7 +10,8 @@ import {
   BarChart3,
   Moon,
   Sun,
-  Bot
+  Bot,
+  Play
 } from 'lucide-react';
 
 export default function Navbar({
@@ -163,7 +164,7 @@ export default function Navbar({
               </>
             ) : (
               <>
-                <Sparkles size={16} />
+                <Play size={15} fill="currentColor" />
                 <span className="btn-text-full">Generate Timetable</span>
                 <span className="btn-text-short">Generate</span>
               </>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import confetti from 'canvas-confetti';
 import Navbar from './components/Navbar';
 import ViewSelector from './components/ViewSelector';
 import TimetableGrid from './components/TimetableGrid';
@@ -155,14 +154,6 @@ export default function App() {
       setStats(result.stats);
       setQuality(result.quality);
       setUnallocated(result.unallocated || []);
-
-      if (result.success && (result.stats?.hardViolations || 0) === 0) {
-        confetti({
-          particleCount: 80,
-          spread: 70,
-          origin: { y: 0.6 }
-        });
-      }
     } catch (err) {
       console.error('Solver error:', err);
     } finally {
