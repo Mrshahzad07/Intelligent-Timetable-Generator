@@ -7,6 +7,7 @@ import StatsDashboard from './components/StatsDashboard';
 import FeasibilityDrawer from './components/FeasibilityDrawer';
 import ManualSwapModal from './components/ManualSwapModal';
 import DataConfigModal from './components/DataConfigModal';
+import AnalyticsModal from './components/AnalyticsModal';
 
 import { DEFAULT_CONFIG, ROOM_TYPES, SUBJECT_TYPES } from './data/models';
 import { ALL_PRESETS, PRESET_ENGINEERING, PRESET_IMPOSSIBLE_CONFLICTS } from './data/presets';
@@ -16,6 +17,15 @@ import { exportToCSV, exportToJSON, triggerPrint } from './utils/exportUtils';
 import './App.css';
 
 export default function App() {
+  // Theme State (Dark / Light)
+  const [theme, setTheme] = useState('dark');
+
+  const handleToggleTheme = () => {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    document.documentElement.setAttribute('data-theme', next);
+  };
+
   // Scenario Preset
   const [currentPresetId, setCurrentPresetId] = useState(PRESET_ENGINEERING.id);
 
@@ -42,6 +52,7 @@ export default function App() {
   // UI Modals
   const [isFeasibilityOpen, setIsFeasibilityOpen] = useState(false);
   const [isConfigOpen, setIsConfigOpen] = useState(false);
+  const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
   const [selectedSlotForEdit, setSelectedSlotForEdit] = useState(null);
 
   // Feasibility Check
@@ -183,10 +194,13 @@ export default function App() {
         feasibility={feasibility}
         onOpenFeasibilityDrawer={() => setIsFeasibilityOpen(true)}
         onOpenConfigModal={() => setIsConfigOpen(true)}
+        onOpenAnalyticsModal={() => setIsAnalyticsOpen(true)}
         onExportCSV={() => exportToCSV(timetable, { divisions, rooms, faculty, subjects, config })}
         onExportJSON={() => exportToJSON({ divisions, rooms, faculty, subjects, config, timetable })}
         onPrint={triggerPrint}
         hasTimetable={timetable.length > 0}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
       />
 
       {/* Main Content Area */}
@@ -268,6 +282,19 @@ export default function App() {
         subjects={subjects}
         setSubjects={setSubjects}
         onResetPreset={() => handleSelectPreset(currentPresetId)}
+      />
+
+      {/* Institutional Analytics & Constraint Audit Modal */}
+      <AnalyticsModal
+        isOpen={isAnalyticsOpen}
+        onClose={() => setIsAnalyticsOpen(false)}
+        stats={stats}
+        quality={quality}
+        timetable={timetable}
+        rooms={rooms}
+        faculty={faculty}
+        divisions={divisions}
+        config={config}
       />
     </div>
   );

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import SlotCard from './SlotCard';
-import { Coffee, PlusCircle, AlertTriangle, Sparkles } from 'lucide-react';
+import { Coffee, PlusCircle, AlertTriangle, Sparkles, Search, X } from 'lucide-react';
 
 export default function TimetableGrid({
   viewMode,
@@ -17,6 +17,8 @@ export default function TimetableGrid({
   onEmptySlotClick,
   unallocated = []
 }) {
+  const [searchQuery, setSearchQuery] = useState('');
+
   const divisionMap = new Map(divisions.map(d => [d.id, d]));
   const roomMap = new Map(rooms.map(r => [r.id, r]));
   const facultyMap = new Map(faculty.map(f => [f.id, f]));
@@ -107,6 +109,24 @@ export default function TimetableGrid({
       {/* Grid Container */}
       {viewMode === 'master' ? (
         <div className="master-grid-container">
+          <div className="master-search-toolbar">
+            <div className="search-box-wrapper">
+              <Search size={14} className="search-icon" />
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Highlight course, professor, or room..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {searchQuery && (
+                <button className="btn-search-clear" onClick={() => setSearchQuery('')}>
+                  <X size={12} />
+                </button>
+              )}
+            </div>
+          </div>
+
           {divisions.map(div => (
             <div key={div.id} className="master-division-section">
               <div className="master-division-header">
@@ -159,6 +179,7 @@ export default function TimetableGrid({
                                   isContinuation={match.isContinuation}
                                   onClick={() => onSlotClick(match.slot)}
                                   showDivision={false}
+                                  searchQuery={searchQuery}
                                 />
                               ) : (
                                 <div
@@ -182,11 +203,36 @@ export default function TimetableGrid({
       ) : (
         <div className="single-grid-container">
           <div className="grid-header-meta">
-            <h2 className="current-schedule-title">{currentEntityName()}</h2>
-            <div className="grid-stats-mini">
-              <span>{activeSlots.length} Total Sessions</span>
-              <span>•</span>
-              <span>{activeSlots.reduce((a, s) => a + (s.duration || 1), 0)} Hours / Week</span>
+            <div className="grid-title-left">
+              <h2 className="current-schedule-title">{currentEntityName()}</h2>
+              <span className="active-status-badge">
+                <span className="active-dot"></span> Live Schedule
+              </span>
+            </div>
+
+            <div className="grid-meta-right">
+              {/* Interactive Search Bar */}
+              <div className="search-box-wrapper">
+                <Search size={14} className="search-icon" />
+                <input
+                  type="text"
+                  className="search-input"
+                  placeholder="Filter subject, faculty, code..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                {searchQuery && (
+                  <button className="btn-search-clear" onClick={() => setSearchQuery('')} title="Clear filter">
+                    <X size={12} />
+                  </button>
+                )}
+              </div>
+
+              <div className="grid-stats-mini">
+                <span>{activeSlots.length} Sessions</span>
+                <span>•</span>
+                <span>{activeSlots.reduce((a, s) => a + (s.duration || 1), 0)} hrs / week</span>
+              </div>
             </div>
           </div>
 
@@ -246,6 +292,7 @@ export default function TimetableGrid({
                               isContinuation={match.isContinuation}
                               onClick={() => onSlotClick(match.slot)}
                               showDivision={viewMode !== 'division'}
+                              searchQuery={searchQuery}
                             />
                           ) : (
                             <div
@@ -253,7 +300,7 @@ export default function TimetableGrid({
                               onClick={() => onEmptySlotClick({ day, period: p.index })}
                             >
                               <span className="empty-text">Free</span>
-                              <PlusCircle size={14} className="empty-add-icon" />
+                              <PlusCircle size={13} className="empty-add-icon" />
                             </div>
                           )}
                         </td>

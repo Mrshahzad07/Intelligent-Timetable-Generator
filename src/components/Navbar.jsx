@@ -6,7 +6,10 @@ import {
   Printer, 
   RefreshCw, 
   Sliders, 
-  ShieldAlert
+  ShieldAlert,
+  BarChart3,
+  Moon,
+  Sun
 } from 'lucide-react';
 
 export default function Navbar({
@@ -18,9 +21,12 @@ export default function Navbar({
   feasibility,
   onOpenFeasibilityDrawer,
   onOpenConfigModal,
+  onOpenAnalyticsModal,
   onExportCSV,
   onPrint,
-  hasTimetable
+  hasTimetable,
+  theme,
+  onToggleTheme
 }) {
   return (
     <header className="navbar">
@@ -80,6 +86,26 @@ export default function Navbar({
 
         {/* Action Buttons */}
         <div className="navbar-actions">
+          {/* Theme Toggle (Dark / Light) */}
+          <button
+            className="btn btn-icon-theme"
+            onClick={onToggleTheme}
+            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+          >
+            {theme === 'dark' ? <Sun size={16} className="sun-icon" /> : <Moon size={16} className="moon-icon" />}
+          </button>
+
+          {/* Analytics & Audit Modal */}
+          <button
+            className="btn btn-secondary"
+            onClick={onOpenAnalyticsModal}
+            title="Institutional constraints audit and facility utilization report"
+          >
+            <BarChart3 size={15} />
+            <span className="btn-text-full">Audit & Stats</span>
+            <span className="btn-text-short">Audit</span>
+          </button>
+
           <button
             className="btn btn-secondary"
             onClick={onOpenConfigModal}

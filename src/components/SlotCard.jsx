@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, MapPin, Clock, FlaskConical, BookOpen, AlertCircle } from 'lucide-react';
+import { User, MapPin, FlaskConical, BookOpen, AlertCircle, Sparkles } from 'lucide-react';
 
 export default function SlotCard({
   slot,
@@ -9,14 +9,33 @@ export default function SlotCard({
   division,
   onClick,
   isContinuation = false,
-  showDivision = false
+  showDivision = false,
+  searchQuery = ''
 }) {
+  const accentColor = subject?.color || '#3b82f6';
+
+  // Check if matches active search filter
+  const isMatch = searchQuery.trim() !== '' && (
+    (subject?.name?.toLowerCase().includes(searchQuery.toLowerCase())) ||
+    (subject?.code?.toLowerCase().includes(searchQuery.toLowerCase())) ||
+    (faculty?.name?.toLowerCase().includes(searchQuery.toLowerCase())) ||
+    (room?.name?.toLowerCase().includes(searchQuery.toLowerCase())) ||
+    (division?.shortCode?.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+
+  const isDimmed = searchQuery.trim() !== '' && !isMatch;
+
   if (isContinuation) {
     return (
-      <div className="slot-card continuation-card" onClick={onClick} title="Continued from previous period">
+      <div 
+        className={`slot-card continuation-card ${isMatch ? 'search-matched' : ''} ${isDimmed ? 'search-dimmed' : ''}`} 
+        onClick={onClick} 
+        style={{ '--card-accent': accentColor }}
+        title="Continued practical session from previous period"
+      >
         <div className="continuation-bar"></div>
         <div className="continuation-content">
-          <FlaskConical size={14} className="icon-pulse" />
+          <FlaskConical size={13} className="icon-pulse" />
           <span>{subject?.name} (Lab Contd.)</span>
         </div>
       </div>
@@ -27,26 +46,34 @@ export default function SlotCard({
 
   return (
     <div
-      className={`slot-card ${isLab ? 'lab-card' : 'theory-card'} ${slot.hasConflict ? 'conflict-card' : ''}`}
+      className={`slot-card ${isLab ? 'lab-card' : 'theory-card'} ${slot.hasConflict ? 'conflict-card' : ''} ${isMatch ? 'search-matched' : ''} ${isDimmed ? 'search-dimmed' : ''}`}
       onClick={onClick}
       style={{
-        borderLeftColor: subject?.color || '#3b82f6'
+        '--card-accent': accentColor,
+        borderLeftColor: accentColor
       }}
       title="Click to inspect, swap, or reassign this slot"
     >
       <div className="slot-card-header">
-        <span className="subject-code-badge" style={{ backgroundColor: `${subject?.color || '#3b82f6'}20`, color: subject?.color || '#3b82f6' }}>
+        <span 
+          className="subject-code-badge" 
+          style={{ 
+            backgroundColor: `${accentColor}25`, 
+            color: accentColor,
+            borderColor: `${accentColor}40`
+          }}
+        >
           {subject?.code || 'SUB'}
         </span>
         <span className="session-type-badge">
           {isLab ? (
             <>
-              <FlaskConical size={12} />
+              <FlaskConical size={11} className="badge-icon-lab" />
               <span>Lab (2h)</span>
             </>
           ) : (
             <>
-              <BookOpen size={12} />
+              <BookOpen size={11} className="badge-icon-theory" />
               <span>Theory</span>
             </>
           )}
@@ -67,19 +94,25 @@ export default function SlotCard({
         )}
 
         <div className="meta-row">
-          <User size={13} className="meta-icon" />
+          <User size={12} className="meta-icon" />
           <span className="meta-text">{faculty?.name || 'Unassigned'}</span>
         </div>
 
         <div className="meta-row">
-          <MapPin size={13} className="meta-icon" />
+          <MapPin size={12} className="meta-icon" />
           <span className="meta-text">{room?.name || 'Unassigned Room'}</span>
         </div>
       </div>
 
+      {isMatch && (
+        <span className="search-match-badge" title="Matches active search">
+          <Sparkles size={10} />
+        </span>
+      )}
+
       {slot.hasConflict && (
         <div className="conflict-badge-mini" title="This slot violates a constraint!">
-          <AlertCircle size={12} />
+          <AlertCircle size={11} />
           <span>Conflict</span>
         </div>
       )}
