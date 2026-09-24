@@ -1,7 +1,7 @@
 # ChronosAI — Intelligent College Timetable Generator
 
 > **Assignment 3 — Intelligent Timetable Generator**  
-> An automated, constraint-aware academic scheduling system that solves high-dimensional timetable generation across multiple divisions, faculty members, subjects, classrooms, and time slots while detecting and diagnosing mathematically impossible or conflicting constraints.
+> An autonomous, constraint-aware academic scheduling platform that solves high-dimensional timetable generation across multiple divisions, faculty members, subjects, classrooms, and time slots while detecting and diagnosing mathematically impossible or conflicting constraints. Powered by a dual-engine architecture: a deterministic Constraint Satisfaction Problem (CSP) solver and an evolutionary Genetic Algorithm (GA) optimizer, paired with a natural language AI scheduling agent.
 
 ---
 
@@ -17,8 +17,12 @@ Academic institutions face an NP-hard combinatorial challenge when creating seme
 **ChronosAI** provides a complete end-to-end web platform and intelligent solver engine that:
 1. Performs **Pre-Flight Feasibility Diagnosis** to mathematically prove whether a set of constraints is satisfiable *before* execution.
 2. Identifies **Impossible or Conflicting Constraints** (Pigeonhole principle violations, laboratory capacity bottlenecks, teacher over-allocation) and presents diagnostic warnings with 1-click auto-fix actions.
-3. Solves scheduling using a **Hybrid Constraint Satisfaction Problem (CSP)** engine with Minimum Remaining Values (MRV) and Degree heuristics.
-4. Provides an **Interactive, Multi-View Grid UI** (Division, Faculty, Room, Master views) with real-time conflict-aware drag-and-drop / manual rescheduling, PDF printing, and CSV export.
+3. Solves scheduling using a **Dual Solver Engine**:
+   - **Deterministic CSP Engine**: Backtracking search with Minimum Remaining Values (MRV) and Degree heuristics with forward checking for instant sub-50ms conflict-free solutions.
+   - **Evolutionary Genetic Algorithm (GA)**: Multi-generational chromosome population evolution, tournament selection, crossover, and mutation optimizing soft constraint fitness in real time.
+4. Provides an **Autonomous AI Ingestion Agent & Guided Interview Wizard**: Administrators can paste unstructured curriculum text or follow a 5-step interactive interview to generate custom timetables without dummy data lock-in.
+5. Delivers an **Institutional A4 Landscape Print & PDF Studio**: Official academic letterhead, customizable course directories, facility legends, institutional directives, and 3-tier sign-off blocks.
+6. Presents an **Interactive Multi-View Grid UI** (Division, Faculty, Room, Master views) with real-time conflict-aware drag-and-drop / manual rescheduling, live spotlight search, and dual dark ("mortem") / light themes.
 
 ---
 
@@ -26,41 +30,74 @@ Academic institutions face an NP-hard combinatorial challenge when creating seme
 
 ```mermaid
 graph TD
-    A[User Interface / Configuration] --> B[Feasibility Diagnostic Engine]
-    B -->|Feasibility Check| C{Is Satisfiable?}
-    C -->|No / Contradictions| D[Conflict Diagnostics & Auto-Fix Drawer]
-    D -->|User Auto-Fix / Adjust| A
-    C -->|Yes / Feasible| E[CSP Intelligent Scheduler]
+    User([User / Admin / Faculty]) --> ModeSelect{Choose Input Method}
+    ModeSelect -->|Natural Language Prompt| AIAgent[AI Scheduling Agent / NLP Parser]
+    ModeSelect -->|Guided Step-by-Step| Wizard[5-Step AI Interview Wizard]
+    ModeSelect -->|Manual Entry / Edit| ConfigDrawer[Configuration & Entity Manager]
+    ModeSelect -->|Clean Canvas| BlankCanvas[Empty State Control Center]
     
-    subgraph Core Solver Engine
-        E --> F[MRV & Degree Heuristic Ordering]
-        F --> G[Domain Pruning & Forward Checking]
-        G --> H[Backtracking Search Engine]
-        H --> I[Soft Constraint Local Optimizer]
+    AIAgent --> DataModel[Synthesized Academic Data Model]
+    Wizard --> DataModel
+    ConfigDrawer --> DataModel
+    BlankCanvas --> DataModel
+
+    DataModel --> PreFlight[Pre-Flight Feasibility Engine]
+    PreFlight -->|Feasibility Check| IsFeasible{Is Satisfiable?}
+    
+    IsFeasible -->|No / Contradictions| ConflictDrawer[Conflict Diagnostics & Auto-Fix Drawer]
+    ConflictDrawer -->|1-Click Auto-Fix Action| DataModel
+    
+    IsFeasible -->|Yes / Feasible| SolverChoice{Select Solver Engine}
+    
+    SolverChoice -->|Deterministic CSP| CSP[CSP Backtracking Engine]
+    subgraph CSP Engine
+        CSP --> MRV[MRV & Degree Heuristics]
+        MRV --> FwdCheck[Forward Checking & Domain Pruning]
+        FwdCheck --> CSPOutput[Conflict-Free Assignment]
+    end
+    
+    SolverChoice -->|Evolutionary GA| GA[Genetic Algorithm Optimizer]
+    subgraph GA Engine
+        GA --> PopInit[Chromosome Population Initialization]
+        PopInit --> FitnessEval[Multi-Objective Fitness Evaluation]
+        FitnessEval --> Crossover[Tournament Selection & Crossover]
+        Crossover --> Mutate[Legal Gene Mutation]
+        Mutate --> GAOutput[Optimal Evolved Schedule]
     end
 
-    I --> J[Quality & Fitness Evaluator]
-    J --> K[Interactive Timetable Grid]
+    CSPOutput --> QualityEval[Fitness Evaluator & Soft Metric Scorer]
+    GAOutput --> QualityEval
+
+    QualityEval --> InteractiveGrid[Interactive Timetable Grid]
     
     subgraph Multi-View Presentation
-        K --> L[Division Timetable View]
-        K --> M[Faculty Timetable View]
-        K --> N[Room Utilization View]
-        K --> O[Master Cross-Division View]
+        InteractiveGrid --> DivView[Division Schedule View]
+        InteractiveGrid --> FacView[Faculty Schedule View]
+        InteractiveGrid --> RoomView[Room Utilization View]
+        InteractiveGrid --> MasterView[Master Institutional Matrix]
     end
 
-    K --> P[Conflict-Aware Slot Rescheduler]
-    P -->|Live Hard Constraint Validation| K
-    K --> Q[Export Engine: PDF / CSV / JSON]
+    InteractiveGrid --> LiveSearch[Real-Time Spotlight Search & Glow]
+    InteractiveGrid --> SlotSwap[Conflict-Aware Manual Slot Rescheduler]
+    SlotSwap -->|Live 7-Invariant Validation| InteractiveGrid
+
+    InteractiveGrid --> PrintStudio[Institutional A4 Landscape Print Studio]
+    InteractiveGrid --> AuditModal[Institutional Analytics & Audit Modal]
 ```
 
-### Architectural Components:
-- **`src/data/models.js`**: Core data schemas, constraint definitions (`HARD_CONSTRAINTS`, `SOFT_CONSTRAINTS`), and entity factory/validation utilities.
-- **`src/solver/feasibilityChecker.js`**: Pre-flight mathematical bound analyzer that tests pigeonhole capacity, lab block availability, teacher workload ceilings, and room sizing.
+### File & Directory Map:
+- **`src/data/models.js`**: Core data schemas, constraint definitions (`HARD_CONSTRAINTS`, `SOFT_CONSTRAINTS`), and entity factory/validation utilities (`createDivision`, `createRoom`, `createFaculty`, `createSubject`).
+- **`src/data/presets.js`**: Pre-configured academic datasets (Solvable 3-Division Engineering Department, Impossible & Conflicting Scenarios, Tight Resource Stress Tests).
+- **`src/solver/feasibilityChecker.js`**: Pre-flight algebraic bounds analyzer testing pigeonhole limits, lab capacity bottlenecks, teacher contract ceilings, and seating.
 - **`src/solver/timetableSolver.js`**: Constraint Satisfaction Problem (CSP) solver implementing Minimum Remaining Values (MRV), Degree Heuristic, and Least Constraining Value (LCV) search.
+- **`src/solver/geneticAlgorithmSolver.js`**: Evolutionary Genetic Algorithm optimizer implementing chromosome representation, tournament selection, crossover, and legal slot mutation across generations.
 - **`src/solver/fitnessEvaluator.js`**: Multi-objective quality scoring function evaluating teacher fatigue, subject daily spread, student schedule holes, and room utilization.
-- **`src/solver/conflictValidator.js`**: Real-time interactive validator that prevents users from introducing double-bookings or invalid states during manual rescheduling.
-- **`src/components/`**: Modular, responsive React interface styled with custom CSS, glassmorphism, and accessible color-coding.
+- **`src/solver/conflictValidator.js`**: Real-time interactive validator preventing double-bookings and constraint breaches during manual moves.
+- **`src/components/AIAgentAssistantModal.jsx`**: Autonomous natural language prompt parser, department presets, and 5-step conversational setup wizard.
+- **`src/components/EmptyStateControlCenter.jsx`**: Zero-dummy-data onboarding canvas with instant AI agent launch, manual custom builder, and quick-start department templates.
+- **`src/components/PrintSheetModal.jsx` & `src/components/PrintableTimetableSheet.jsx`**: Configurable A4 landscape print preview with letterhead customization and toggleable legend/regulation sections.
+- **`src/components/AnalyticsModal.jsx`**: Institutional audit modal displaying hard invariant validation, room utilization, and fitness distribution.
+- **`src/components/TimetableGrid.jsx` & `src/components/SlotCard.jsx`**: Grid layout with tactile 3D hover animations, glassmorphism shimmer, and live search spotlight halo.
 
 ---
 
@@ -89,12 +126,14 @@ Academic scheduling is modeled as a CSP defined by a triple $\langle X, D, C \ra
 3. **Least Constraining Value (LCV)**:
    - When selecting a time slot, values that preserve maximum flexibility for remaining sessions are preferred.
 
-### 3.3 Soft Constraints & Multi-Objective Fitness Function
-Once hard constraints are satisfied, solutions are scored ($0 - 100\%$) based on:
-- **Subject Daily Spread**: Penalizes assigning the same theory subject multiple times in a single day to the same division.
-- **Faculty Fatigue Mitigation**: Penalizes more than 2 consecutive lecture periods without a rest gap.
-- **Faculty Workload Distribution**: Penalizes exceeding the configured `maxDailyLectures` threshold.
-- **Student Schedule Compactness**: Minimizes isolated "window" periods between classes.
+### 3.3 Evolutionary Genetic Algorithm (GA) Engine
+For deep multi-objective optimization, ChronosAI integrates a Genetic Algorithm:
+- **Chromosome Representation**: An individual schedule is encoded as an array of genes, where each gene represents a scheduled session $\langle \text{subjectId}, \text{divisionId}, \text{facultyId}, \text{roomId}, \text{dayIndex}, \text{periodIndex}, \text{duration} \rangle$.
+- **Fitness Function**: Evaluates both hard constraint adherence (severe penalty for overlaps) and soft criteria (rewards even subject dispersion, minimizes faculty fatigue gaps, maximizes room utilization).
+- **Selection**: Tournament selection chooses the fittest candidate chromosomes for reproduction.
+- **Crossover**: Single-point crossover recombines parent schedules while preserving multi-period block atomicity.
+- **Mutation**: Randomly re-assigns non-fixed sessions to legal alternative slots and rooms without violating lunch boundaries.
+- **Live Generational Progress**: Reports evolutionary convergence in real time via animated UI progress indicators.
 
 ---
 
@@ -133,9 +172,9 @@ When impossible constraints are detected:
 
 | Approach | Trade-off Consideration | Decision in ChronosAI |
 | :--- | :--- | :--- |
-| **CSP Backtracking vs. Pure Genetic Algorithm (GA)** | Genetic Algorithms can struggle with strict hard constraints (often producing invalid individuals requiring heavy repair operators). CSP with forward checking guarantees 100% hard constraint satisfaction deterministically. | **Selected CSP with MRV heuristics** for guaranteed conflict-free schedules in under 50ms, combined with local heuristic sorting for soft constraint optimization. |
+| **CSP Backtracking vs. Pure Genetic Algorithm (GA)** | Genetic Algorithms can struggle with strict hard constraints (often producing invalid individuals requiring heavy repair operators). CSP with forward checking guarantees 100% hard constraint satisfaction deterministically. | **Implemented Dual Architecture**: CSP engine provides instantaneous guaranteed hard constraint satisfaction, while the Genetic Algorithm provides evolutionary soft optimization. |
 | **Client-Side vs. Server-Side Execution** | Server-side execution allows heavy linear programming solvers (e.g. Gurobi, OR-Tools) but requires backend infrastructure and network roundtrips. Client-side execution provides instantaneous reactivity and zero setup. | **Selected optimized client-side JavaScript engine**. The bitmask-indexed CSP solver runs in 10-50ms directly in the browser, providing instant feedback without backend latency. |
-| **Strict Lock vs. Interactive Conflict Override** | Forcing users into strict dialog locks on manual moves versus allowing soft exploration. | **Implemented real-time live validation preview**: moving a slot dynamically highlights conflicts in real time while explaining why a slot is invalid. |
+| **Static Demo Data vs. Dynamic AI Ingestion** | Hardcoding demo datasets makes initial showcase simple but prevents real-world usage. A purely blank form is intimidating to new users. | **Engineered Dynamic Hybrid Workflow**: Zero dummy data lock-in with a blank canvas, complemented by a natural language AI parser and 5-step conversational setup wizard. |
 
 ---
 
@@ -156,13 +195,17 @@ npm install
 # 3. Run automated test suite (20/20 verification tests)
 npm test
 
-# 4. Start local development server
+# 4. Build production bundle to verify compilation
+npm run build
+
+# 5. Start local development server
 npm run dev
 ```
 
 Open your browser at `http://localhost:5173/`.
 
 ### Available Scenarios to Test
+- **Blank Canvas**: Clear all data to start fresh with zero dummy records, then launch the AI Agent.
 - **Faculty of Engineering (Solvable)**: Complete department with 3 divisions, 12 faculty, 6 rooms/labs, theory + practicals. Generates 100% conflict-free schedule in ~10ms.
 - **Impossible & Conflicting Constraints (Test Scenario)**: Triggers pigeonhole violations, room bottlenecks, and faculty over-allocations with live diagnostic alerts and 1-click auto-fix actions.
 - **Tight Resources & High Density**: Maximum capacity room utilization scenario.
@@ -207,4 +250,3 @@ To stand out among all submissions, ChronosAI introduces unique production-grade
    - **Natural Language AI Prompt**: Administrators can describe or paste their department curriculum text; the AI Agent automatically extracts cohorts, classrooms, laboratories, professors, weekly hours, and practical sessions.
    - **Step-by-Step AI Interview**: 5-step conversational setup wizard that asks for Department details, Divisions, Rooms, Faculty limits, and Course allocations with instant feasibility checks.
    - **Genetic Algorithm (GA) Evolutionary Engine (`src/solver/geneticAlgorithmSolver.js`)**: Runs generational chromosome mutations and selection to evolve the schedule dynamically, optimizing soft constraints in real time with live UI evolutionary toasts.
-
