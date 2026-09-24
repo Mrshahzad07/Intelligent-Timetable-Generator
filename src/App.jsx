@@ -10,11 +10,14 @@ import DataConfigModal from './components/DataConfigModal';
 import AnalyticsModal from './components/AnalyticsModal';
 import PrintSheetModal from './components/PrintSheetModal';
 import PrintableTimetableSheet from './components/PrintableTimetableSheet';
+import AIAgentAssistantModal from './components/AIAgentAssistantModal';
+import EmptyStateControlCenter from './components/EmptyStateControlCenter';
 
 import { DEFAULT_CONFIG, ROOM_TYPES, SUBJECT_TYPES } from './data/models';
-import { ALL_PRESETS, PRESET_ENGINEERING, PRESET_IMPOSSIBLE_CONFLICTS } from './data/presets';
+import { ALL_PRESETS, PRESET_ENGINEERING, PRESET_MECHANICAL, PRESET_BLANK_CANVAS, PRESET_IMPOSSIBLE_CONFLICTS, PRESET_TIGHT_RESOURCE } from './data/presets';
 import { checkFeasibility } from './solver/feasibilityChecker';
 import { generateTimetable } from './solver/timetableSolver';
+import { runGeneticAlgorithm } from './solver/geneticAlgorithmSolver';
 import { exportToCSV, exportToJSON, triggerPrint } from './utils/exportUtils';
 import './App.css';
 
@@ -56,6 +59,8 @@ export default function App() {
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
+  const [isAIAgentOpen, setIsAIAgentOpen] = useState(false);
+  const [aiAgentProgress, setAiAgentProgress] = useState(null);
   const [selectedSlotForEdit, setSelectedSlotForEdit] = useState(null);
 
   // Customized Print Settings
@@ -79,11 +84,18 @@ export default function App() {
 
   // Feasibility Check
   const feasibility = useMemo(() => {
+    if (divisions.length === 0 || subjects.length === 0) {
+      return { isFeasible: true, criticalErrors: [], warnings: [], autoFixSuggestions: [] };
+    }
     return checkFeasibility(divisions, rooms, faculty, subjects, config);
   }, [divisions, rooms, faculty, subjects, config]);
 
-  // Load Preset
+  // Load Preset or Custom Dataset
   const handleSelectPreset = (presetId) => {
+    if (presetId === 'preset-blank') {
+      handleClearAllData();
+      return;
+    }
     const found = ALL_PRESETS.find(p => p.id === presetId) || PRESET_ENGINEERING;
     setCurrentPresetId(found.id);
     setDivisions(JSON.parse(JSON.stringify(found.divisions)));
@@ -102,19 +114,41 @@ export default function App() {
       setStats(null);
       setQuality(null);
       setUnallocated([]);
+    } else {
+      handleGenerate({
+        divisions: found.divisions,
+        rooms: found.rooms,
+        faculty: found.faculty,
+        subjects: found.subjects
+      });
     }
   };
 
-  // Generate Timetable with Intelligent CSP Solver
-  const handleGenerate = async () => {
+  // Generate Timetable with Intelligent Hybrid Genetic CSP Solver
+  const handleGenerate = async (customDataset = null) => {
+    const curDivs = customDataset?.divisions || divisions;
+    const curRooms = customDataset?.rooms || rooms;
+    const curFac = customDataset?.faculty || faculty;
+    const curSubs = customDataset?.subjects || subjects;
+
+    if (curDivs.length === 0 || curSubs.length === 0) {
+      setTimetable([]);
+      setStats(null);
+      setQuality(null);
+      return;
+    }
+
     setIsSolving(true);
     try {
-      const result = await generateTimetable({
-        divisions,
-        rooms,
-        faculty,
-        subjects,
-        config
+      const result = await runGeneticAlgorithm({
+        divisions: curDivs,
+        rooms: curRooms,
+        faculty: curFac,
+        subjects: curSubs,
+        config,
+        generations: 16
+      }, (progress) => {
+        setAiAgentProgress(progress);
       });
 
       setTimetable(result.timetable);
@@ -122,7 +156,7 @@ export default function App() {
       setQuality(result.quality);
       setUnallocated(result.unallocated || []);
 
-      if (result.success && result.stats.hardViolations === 0) {
+      if (result.success && (result.stats?.hardViolations || 0) === 0) {
         confetti({
           particleCount: 80,
           spread: 70,
@@ -133,10 +167,71 @@ export default function App() {
       console.error('Solver error:', err);
     } finally {
       setIsSolving(false);
+      setAiAgentProgress(null);
     }
   };
 
-  // Initial Auto-Generation on Mount for instant WOW factor
+  // Apply Data Extracted or Built by AI Agent
+  const handleApplyDynamicData = (dataset) => {
+    const newDivs = dataset.divisions || [];
+    const newRooms = dataset.rooms || [];
+    const newFac = dataset.faculty || [];
+    const newSubs = dataset.subjects || [];
+
+    setDivisions(newDivs);
+    setRooms(newRooms);
+    setFaculty(newFac);
+    setSubjects(newSubs);
+    setCurrentPresetId('custom-active');
+
+    if (newDivs[0]) setSelectedDivisionId(newDivs[0].id);
+    if (newFac[0]) setSelectedFacultyId(newFac[0].id);
+    if (newRooms[0]) setSelectedRoomId(newRooms[0].id);
+
+    // Update print settings department title
+    if (dataset.department) {
+      setPrintSettings(prev => ({
+        ...prev,
+        departmentName: dataset.department.toUpperCase()
+      }));
+    }
+
+    // Immediately trigger evolutionary schedule solver
+    handleGenerate({
+      divisions: newDivs,
+      rooms: newRooms,
+      faculty: newFac,
+      subjects: newSubs
+    });
+  };
+
+  // Clear all data to start with clean canvas
+  const handleClearAllData = () => {
+    setDivisions([]);
+    setRooms([]);
+    setFaculty([]);
+    setSubjects([]);
+    setTimetable([]);
+    setStats(null);
+    setQuality(null);
+    setUnallocated([]);
+    setSelectedDivisionId(null);
+    setSelectedFacultyId(null);
+    setSelectedRoomId(null);
+    setCurrentPresetId('preset-blank');
+  };
+
+  const handleLoadTemplate = (templateKey) => {
+    if (templateKey === 'mech') {
+      handleSelectPreset(PRESET_MECHANICAL.id);
+    } else if (templateKey === 'cse') {
+      handleSelectPreset(PRESET_ENGINEERING.id);
+    } else {
+      handleSelectPreset(PRESET_TIGHT_RESOURCE.id);
+    }
+  };
+
+  // Initial Auto-Generation on Mount
   useEffect(() => {
     handleGenerate();
   }, []);
@@ -217,6 +312,7 @@ export default function App() {
         onOpenFeasibilityDrawer={() => setIsFeasibilityOpen(true)}
         onOpenConfigModal={() => setIsConfigOpen(true)}
         onOpenAnalyticsModal={() => setIsAnalyticsOpen(true)}
+        onOpenAIAgentModal={() => setIsAIAgentOpen(true)}
         onExportCSV={() => exportToCSV(timetable, { divisions, rooms, faculty, subjects, config })}
         onExportJSON={() => exportToJSON({ divisions, rooms, faculty, subjects, config, timetable })}
         onPrint={() => setIsPrintModalOpen(true)}
@@ -227,46 +323,80 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="main-content">
-        {/* Performance & Quality Stats Bar */}
-        <StatsDashboard stats={stats} quality={quality} />
+        {divisions.length === 0 || subjects.length === 0 ? (
+          <EmptyStateControlCenter
+            onOpenAIAgent={() => setIsAIAgentOpen(true)}
+            onOpenConfig={() => setIsConfigOpen(true)}
+            onLoadTemplate={handleLoadTemplate}
+          />
+        ) : (
+          <>
+            {/* Performance & Quality Stats Bar */}
+            <StatsDashboard stats={stats} quality={quality} />
 
-        {/* View Mode & Entity Selector */}
-        <ViewSelector
-          viewMode={viewMode}
-          setViewMode={setViewMode}
-          divisions={divisions}
-          faculty={faculty}
-          rooms={rooms}
-          subjects={subjects}
-          timetable={timetable}
-          selectedDivisionId={selectedDivisionId}
-          setSelectedDivisionId={setSelectedDivisionId}
-          selectedFacultyId={selectedFacultyId}
-          setSelectedFacultyId={setSelectedFacultyId}
-          selectedRoomId={selectedRoomId}
-          setSelectedRoomId={setSelectedRoomId}
-        />
+            {/* View Mode & Entity Selector */}
+            <ViewSelector
+              viewMode={viewMode}
+              setViewMode={setViewMode}
+              divisions={divisions}
+              faculty={faculty}
+              rooms={rooms}
+              subjects={subjects}
+              timetable={timetable}
+              selectedDivisionId={selectedDivisionId}
+              setSelectedDivisionId={setSelectedDivisionId}
+              selectedFacultyId={selectedFacultyId}
+              setSelectedFacultyId={setSelectedFacultyId}
+              selectedRoomId={selectedRoomId}
+              setSelectedRoomId={setSelectedRoomId}
+            />
 
-        {/* Calendar Matrix Timetable Grid */}
-        <TimetableGrid
-          viewMode={viewMode}
-          timetable={timetable}
-          divisions={divisions}
-          rooms={rooms}
-          faculty={faculty}
-          subjects={subjects}
-          config={config}
-          selectedDivisionId={selectedDivisionId}
-          selectedFacultyId={selectedFacultyId}
-          selectedRoomId={selectedRoomId}
-          onSlotClick={(slot) => setSelectedSlotForEdit(slot)}
-          onEmptySlotClick={({ day, period, divisionId }) => {
-            // User clicked an empty slot
-            console.log('Empty slot clicked:', day, period, divisionId);
-          }}
-          unallocated={unallocated}
-        />
+            {/* Calendar Matrix Timetable Grid */}
+            <TimetableGrid
+              viewMode={viewMode}
+              timetable={timetable}
+              divisions={divisions}
+              rooms={rooms}
+              faculty={faculty}
+              subjects={subjects}
+              config={config}
+              selectedDivisionId={selectedDivisionId}
+              selectedFacultyId={selectedFacultyId}
+              selectedRoomId={selectedRoomId}
+              onSlotClick={(slot) => setSelectedSlotForEdit(slot)}
+              onEmptySlotClick={({ day, period, divisionId }) => {
+                console.log('Empty slot clicked:', day, period, divisionId);
+              }}
+              unallocated={unallocated}
+            />
+          </>
+        )}
       </main>
+
+      {/* Live AI Evolutionary Generation Toast */}
+      {aiAgentProgress && (
+        <div className="ai-evolution-toast">
+          <div className="toast-spinner"></div>
+          <div className="toast-text">
+            <strong>{aiAgentProgress.message}</strong>
+            <span>Genetic Algorithm Evolution • Generation {aiAgentProgress.generation}/{aiAgentProgress.maxGenerations}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Autonomous AI Agent Assistant Modal */}
+      <AIAgentAssistantModal
+        isOpen={isAIAgentOpen}
+        onClose={() => setIsAIAgentOpen(false)}
+        onApplyDynamicData={handleApplyDynamicData}
+        onClearAllData={handleClearAllData}
+        onLoadTemplate={handleLoadTemplate}
+        divisions={divisions}
+        rooms={rooms}
+        faculty={faculty}
+        subjects={subjects}
+        config={config}
+      />
 
       {/* Feasibility & Mathematical Conflict Drawer */}
       <FeasibilityDrawer

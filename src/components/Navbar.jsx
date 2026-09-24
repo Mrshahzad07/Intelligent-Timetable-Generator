@@ -9,7 +9,8 @@ import {
   ShieldAlert,
   BarChart3,
   Moon,
-  Sun
+  Sun,
+  Bot
 } from 'lucide-react';
 
 export default function Navbar({
@@ -22,6 +23,7 @@ export default function Navbar({
   onOpenFeasibilityDrawer,
   onOpenConfigModal,
   onOpenAnalyticsModal,
+  onOpenAIAgentModal,
   onExportCSV,
   onPrint,
   hasTimetable,
@@ -86,6 +88,17 @@ export default function Navbar({
 
         {/* Action Buttons */}
         <div className="navbar-actions">
+          {/* AI Agent Assistant Button */}
+          <button
+            className="btn btn-ai-agent"
+            onClick={onOpenAIAgentModal}
+            title="Prompt the AI Agent to build your timetable or start a dynamic setup"
+          >
+            <Bot size={15} className="sparkle-anim" />
+            <span className="btn-text-full">AI Agent</span>
+            <span className="btn-text-short">AI</span>
+          </button>
+
           {/* Theme Toggle (Dark / Light) */}
           <button
             className="btn btn-icon-theme"

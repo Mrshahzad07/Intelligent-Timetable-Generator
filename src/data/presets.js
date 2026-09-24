@@ -154,4 +154,51 @@ export const PRESET_TIGHT_RESOURCE = {
   ]
 };
 
-export const ALL_PRESETS = [PRESET_ENGINEERING, PRESET_IMPOSSIBLE_CONFLICTS, PRESET_TIGHT_RESOURCE];
+export const PRESET_MECHANICAL = {
+  id: 'preset-mechanical',
+  name: 'Mechanical Engineering (Thermodynamics & CAD)',
+  description: '2 Cohorts (ME-A, ME-B), 3 Lecture Halls, 2 Workshop/CAD Labs, Thermal Engineering & Manufacturing.',
+  isFeasible: true,
+  divisions: [
+    { id: 'div-mea', name: 'ME-A (Mechanical Yr 3, Sec A)', shortCode: 'ME-A', studentCount: 60, color: '#f59e0b' },
+    { id: 'div-meb', name: 'ME-B (Mechanical Yr 3, Sec B)', shortCode: 'ME-B', studentCount: 55, color: '#f97316' }
+  ],
+  rooms: [
+    { id: 'rm-m1', name: 'Hall M-101 (Lecture)', type: ROOM_TYPES.LECTURE_HALL, capacity: 70, building: 'Mechanical Wing' },
+    { id: 'rm-m2', name: 'Hall M-102 (Lecture)', type: ROOM_TYPES.LECTURE_HALL, capacity: 70, building: 'Mechanical Wing' },
+    { id: 'rm-m3', name: 'CAD Simulation Lab', type: ROOM_TYPES.LAB, capacity: 65, building: 'Computing Wing' },
+    { id: 'rm-m4', name: 'Thermal Dynamics Lab', type: ROOM_TYPES.LAB, capacity: 65, building: 'Heavy Machinery Wing' }
+  ],
+  faculty: [
+    { id: 'fac-sharma', name: 'Dr. R. Sharma', department: 'Thermal Eng', maxDailyLectures: 3, maxWeeklyLectures: 14, unavailableSlots: [] },
+    { id: 'fac-patel', name: 'Prof. K. Patel', department: 'Design & CAD', maxDailyLectures: 3, maxWeeklyLectures: 14, unavailableSlots: [] },
+    { id: 'fac-singh', name: 'Dr. V. Singh', department: 'Manufacturing', maxDailyLectures: 3, maxWeeklyLectures: 14, unavailableSlots: [] },
+    { id: 'fac-gupta', name: 'Dr. A. Gupta', department: 'Fluid Dynamics', maxDailyLectures: 3, maxWeeklyLectures: 14, unavailableSlots: [] }
+  ],
+  subjects: [
+    { id: 'sub-mea-fm', name: 'Fluid Mechanics', code: 'ME301', type: SUBJECT_TYPES.THEORY, divisionId: 'div-mea', facultyId: 'fac-gupta', weeklySessions: 3, duration: 1, preferredRoomType: ROOM_TYPES.LECTURE_HALL, color: '#3b82f6' },
+    { id: 'sub-mea-fmlab', name: 'Fluid Mechanics Lab (2hr)', code: 'ME301L', type: SUBJECT_TYPES.PRACTICAL, divisionId: 'div-mea', facultyId: 'fac-gupta', weeklySessions: 1, duration: 2, preferredRoomType: ROOM_TYPES.LAB, color: '#2563eb' },
+    { id: 'sub-mea-th', name: 'Thermodynamics & Heat Transfer', code: 'ME302', type: SUBJECT_TYPES.THEORY, divisionId: 'div-mea', facultyId: 'fac-sharma', weeklySessions: 3, duration: 1, preferredRoomType: ROOM_TYPES.LECTURE_HALL, color: '#f59e0b' },
+    { id: 'sub-mea-thlab', name: 'Thermal Power Lab (2hr)', code: 'ME302L', type: SUBJECT_TYPES.PRACTICAL, divisionId: 'div-mea', facultyId: 'fac-sharma', weeklySessions: 1, duration: 2, preferredRoomType: ROOM_TYPES.LAB, color: '#d97706' },
+    { id: 'sub-mea-cad', name: 'Solid Modeling & CAD Lab (2hr)', code: 'ME303L', type: SUBJECT_TYPES.PRACTICAL, divisionId: 'div-mea', facultyId: 'fac-patel', weeklySessions: 2, duration: 2, preferredRoomType: ROOM_TYPES.LAB, color: '#8b5cf6' },
+
+    { id: 'sub-meb-fm', name: 'Fluid Mechanics', code: 'ME301', type: SUBJECT_TYPES.THEORY, divisionId: 'div-meb', facultyId: 'fac-gupta', weeklySessions: 3, duration: 1, preferredRoomType: ROOM_TYPES.LECTURE_HALL, color: '#3b82f6' },
+    { id: 'sub-meb-th', name: 'Thermodynamics & Heat Transfer', code: 'ME302', type: SUBJECT_TYPES.THEORY, divisionId: 'div-meb', facultyId: 'fac-sharma', weeklySessions: 3, duration: 1, preferredRoomType: ROOM_TYPES.LECTURE_HALL, color: '#f59e0b' },
+    { id: 'sub-meb-thlab', name: 'Thermal Power Lab (2hr)', code: 'ME302L', type: SUBJECT_TYPES.PRACTICAL, divisionId: 'div-meb', facultyId: 'fac-sharma', weeklySessions: 1, duration: 2, preferredRoomType: ROOM_TYPES.LAB, color: '#d97706' },
+    { id: 'sub-meb-cad', name: 'Solid Modeling & CAD Lab (2hr)', code: 'ME303L', type: SUBJECT_TYPES.PRACTICAL, divisionId: 'div-meb', facultyId: 'fac-patel', weeklySessions: 2, duration: 2, preferredRoomType: ROOM_TYPES.LAB, color: '#8b5cf6' },
+    { id: 'sub-meb-mfg', name: 'Manufacturing Processes', code: 'ME304', type: SUBJECT_TYPES.THEORY, divisionId: 'div-meb', facultyId: 'fac-singh', weeklySessions: 3, duration: 1, preferredRoomType: ROOM_TYPES.LECTURE_HALL, color: '#10b981' }
+  ]
+};
+
+export const PRESET_BLANK_CANVAS = {
+  id: 'preset-blank',
+  name: '⚡ Blank Canvas (Start from 0 Entities)',
+  description: 'Completely clear slate with 0 static dummy data. Use the AI Agent to build your real college timetable.',
+  isFeasible: true,
+  divisions: [],
+  rooms: [],
+  faculty: [],
+  subjects: []
+};
+
+export const ALL_PRESETS = [PRESET_ENGINEERING, PRESET_MECHANICAL, PRESET_BLANK_CANVAS, PRESET_IMPOSSIBLE_CONFLICTS, PRESET_TIGHT_RESOURCE];
