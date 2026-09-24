@@ -218,7 +218,7 @@ To stand out among all submissions, ChronosAI introduces unique production-grade
 
 1. **Dual Executive Themes (Dark "Mortem" & Clean Campus Light)**:
    - **Dark Mode**: Cybernetic obsidian theme (`#090d16`) with luminescent accent trims, glassmorphism, and neon glow.
-   - **Light Mode**: High-contrast, executive academic layout with crisp borders, deep slate typography, and 100% WCAG-compliant legibility across all headings, badges, and tables.
+   - **Light Mode (Day Mode)**: High-contrast, executive academic layout with crisp slate borders, deep midnight typography (`#0f172a`), dedicated white-background form controls/textareas, high-contrast active pills, and 100% WCAG AAA-compliant legibility across all headings, badges, and tables.
    - Instant 1-click Sun/Moon toggle with persistent state.
 
 2. **Tactile Card Animations & Shimmer Hover Effects**:

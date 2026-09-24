@@ -56,6 +56,8 @@ Gemini / Antigravity IDE
    The initial solver implementation assumed that `divisions`, `rooms`, and `faculty` arrays were always populated with demo data. When user cleared data or started from a blank canvas, calling `checkFeasibility` or `generateTimetable` without data caused `Cannot read properties of undefined (reading 'length')` or returned division overflow errors on 0 active periods.
 3. **Print Layout Clipped in Browser Print Preview**:
    Initial `@media print` rules did not enforce explicit landscape orientation or hide fixed navigation elements, causing browser print engines to render portrait-oriented cuts and include interactive UI buttons on paper.
+4. **Day / Light Mode Incomplete Overrides & Contrast Gaps**:
+   Several nested components, modals (DataConfigModal, FeasibilityDrawer, AIAgentAssistantModal, PrintSheetModal), input areas, textareas, active pill buttons, and diagnostic messages relied on hardcoded dark-mode text colors (e.g. `#c7d2fe`, `#a7f3d0`, `#fecaca`, `rgba(15, 23, 42, 0.8)`) or lacked explicit light-theme overrides, making headings, form labels, and table cells low-contrast or difficult to read in Day Mode.
 
 ---
 
@@ -66,6 +68,7 @@ Gemini / Antigravity IDE
    ```
 2. Testing the "Clear All Data" and "Blank Canvas" workflow in the browser caused the feasibility drawer to flag an unexpected division overflow error because 0 slots available were compared against 0 sessions using unhandled division edge conditions.
 3. Launching `window.print()` in Chrome browser inspection revealed table headers splitting across multiple pages and the web navbar bleeding into the printable document.
+4. Auditing the website using the browser subagent in Light Mode (Day Mode) across all modals and components revealed that textareas, input fields, active pills, table headings, and feasibility cards lacked sufficient contrast against light backgrounds.
 
 ---
 
@@ -73,4 +76,5 @@ Gemini / Antigravity IDE
 1. **Added `.js` Extensions**: Enforced explicit `.js` paths across all solver and preset import statements (`import { ROOM_TYPES } from './models.js'`).
 2. **Engineered Blank Canvas Guards**: Updated `feasibilityChecker.js` and `timetableSolver.js` to check for zero-entity inputs upfront (`if (!divisions || divisions.length === 0)`), gracefully returning an empty state object with descriptive guidance instead of throwing runtime exceptions.
 3. **Hardened Print Engine CSS**: Added dedicated `@page { size: A4 landscape; margin: 8mm; }`, isolated the printable sheet container using CSS classes, set `overflow: visible` during printing, hid all non-print interface controls (`nav`, `.app-header`, `.analytics-modal`, `.drawer`), and added explicit cell border rules.
-4. **Automated Regression Suite**: Maintained and verified the 20-test automated verification suite (`npm test`), achieving a 100% pass rate across feasibility detection, invariant preservation, and conflict rejection.
+4. **Engineered Comprehensive Day/Light Mode Design System**: Built exhaustive `[data-theme="light"]` overrides in `src/App.css` ensuring WCAG-compliant contrast for all headings (`#0f172a`), form labels (`#1e293b`), subheadings (`#475569`), inputs/textareas (crisp white background with `#cbd5e1` borders and `#0f172a` text), active selection pills (`#e0e7ff` with `#312e81` text), diagnostic conflict cards (`#fff1f2` with `#9f1239` text), and table headers.
+5. **Automated Regression Suite**: Maintained and verified the 20-test automated verification suite (`npm test`), achieving a 100% pass rate across feasibility detection, invariant preservation, and conflict rejection.

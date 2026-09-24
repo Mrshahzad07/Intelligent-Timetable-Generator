@@ -2047,7 +2047,37 @@
 /* =========================================
    LIGHT THEME COMPLETE OVERRIDES & CONTRAST
    ========================================= */
+/* =========================================
+   LIGHT / DAY MODE COMPREHENSIVE DESIGN SYSTEM
+   High contrast, WCAG-compliant legibility across all sections,
+   headings, text, table columns, rows, inputs, modals, and drawers.
+   ========================================= */
 [data-theme="light"] {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f1f5f9;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8fafc;
+  --border-subtle: #cbd5e1;
+  --border-focus: #4f46e5;
+
+  --text-main: #0f172a;
+  --text-muted: #334155;
+  --text-dim: #475569;
+
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-glow: rgba(79, 70, 229, 0.2);
+
+  --success: #15803d;
+  --success-glow: rgba(21, 128, 61, 0.15);
+
+  --warning: #b45309;
+  --warning-glow: rgba(180, 83, 9, 0.15);
+
+  --danger: #b91c1c;
+  --danger-glow: rgba(185, 28, 28, 0.15);
+
   --bg-table-header: #f1f5f9;
   --bg-table-sticky: #f8fafc;
 }
@@ -2057,9 +2087,101 @@
   color: #0f172a;
 }
 
+/* 1. Global Typography, Headings, Subtitles & Form Labels */
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3,
+[data-theme="light"] h4,
+[data-theme="light"] h5,
+[data-theme="light"] h6,
+[data-theme="light"] .modal-title-group h3,
+[data-theme="light"] .drawer-header h3,
+[data-theme="light"] .hero-title,
+[data-theme="light"] .config-group-title,
+[data-theme="light"] .analytics-section-title,
+[data-theme="light"] .form-subheading,
+[data-theme="light"] .step-header-row h4,
+[data-theme="light"] .master-division-header h3,
+[data-theme="light"] .summary-title-row h4 {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] label,
+[data-theme="light"] .preset-label,
+[data-theme="light"] .pill-label,
+[data-theme="light"] .filter-label,
+[data-theme="light"] .form-group label,
+[data-theme="light"] .item-field label,
+[data-theme="light"] .control-field label,
+[data-theme="light"] .sugg-label,
+[data-theme="light"] .stat-label,
+[data-theme="light"] .m-label,
+[data-theme="light"] .workload-label {
+  color: #1e293b !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .modal-subtitle,
+[data-theme="light"] .drawer-header p,
+[data-theme="light"] .hero-subtitle,
+[data-theme="light"] .step-desc,
+[data-theme="light"] .section-toolbar p,
+[data-theme="light"] .autofix-hint,
+[data-theme="light"] .print-hint-text,
+[data-theme="light"] .preview-toolbar,
+[data-theme="light"] .stat-card-label,
+[data-theme="light"] .stat-sub,
+[data-theme="light"] .unavail-counter {
+  color: #475569 !important;
+  font-weight: 500 !important;
+}
+
+/* 2. Global Inputs, Textareas, Selects & Buttons */
+[data-theme="light"] input,
+[data-theme="light"] textarea,
+[data-theme="light"] select,
+[data-theme="light"] .form-control,
+[data-theme="light"] .table-input,
+[data-theme="light"] .table-select,
+[data-theme="light"] .agent-textarea,
+[data-theme="light"] .textarea-custom,
+[data-theme="light"] .search-input {
+  background-color: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] input:focus,
+[data-theme="light"] textarea:focus,
+[data-theme="light"] select:focus,
+[data-theme="light"] .form-control:focus,
+[data-theme="light"] .table-input:focus,
+[data-theme="light"] .table-select:focus,
+[data-theme="light"] .agent-textarea:focus,
+[data-theme="light"] .textarea-custom:focus,
+[data-theme="light"] .search-input:focus {
+  border-color: #4f46e5 !important;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2) !important;
+}
+
+[data-theme="light"] input::placeholder,
+[data-theme="light"] textarea::placeholder,
+[data-theme="light"] .search-input::placeholder,
+[data-theme="light"] .agent-textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+[data-theme="light"] select option {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+/* 3. Top Navigation Bar */
 [data-theme="light"] .navbar {
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.95);
   border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 [data-theme="light"] .brand-title {
@@ -2081,20 +2203,17 @@
   color: #0f172a;
 }
 
-[data-theme="light"] .preset-select option {
-  background: #ffffff;
-  color: #0f172a;
-}
-
 [data-theme="light"] .btn-secondary {
   background: #f1f5f9;
   color: #1e293b;
   border-color: #cbd5e1;
+  font-weight: 600;
 }
 
 [data-theme="light"] .btn-secondary:hover:not(:disabled) {
   background: #e2e8f0;
   border-color: #94a3b8;
+  color: #0f172a;
 }
 
 [data-theme="light"] .btn-icon-theme {
@@ -2109,50 +2228,112 @@
   border-color: #a5b4fc;
 }
 
+[data-theme="light"] .btn-ai-agent {
+  background: linear-gradient(135deg, #e0e7ff 0%, #ede9fe 100%) !important;
+  color: #3730a3 !important;
+  border: 1px solid #a5b4fc !important;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.15) !important;
+}
+
+[data-theme="light"] .btn-ai-agent:hover {
+  background: linear-gradient(135deg, #c7d2fe 0%, #ddd6fe 100%) !important;
+  color: #1e1b4b !important;
+  border-color: #818cf8 !important;
+}
+
+[data-theme="light"] .btn-close {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+[data-theme="light"] .btn-close:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+/* 4. Feasibility Status Badges */
+[data-theme="light"] .feasibility-badge.feasible {
+  background: #dcfce7 !important;
+  color: #15803d !important;
+  border: 1px solid #86efac !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .feasibility-badge.feasible:hover {
+  background: #bbf7d0 !important;
+}
+
+[data-theme="light"] .feasibility-badge.infeasible {
+  background: #fee2e2 !important;
+  color: #b91c1c !important;
+  border: 1px solid #fca5a5 !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .feasibility-badge.infeasible:hover {
+  background: #fecaca !important;
+}
+
+/* 5. Metrics & Stats Bar */
 [data-theme="light"] .stat-card {
   background: #ffffff;
-  border-color: #e2e8f0;
+  border: 1px solid #e2e8f0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 [data-theme="light"] .stat-card:hover {
   border-color: #cbd5e1;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
 }
 
 [data-theme="light"] .stat-card-value {
   color: #0f172a;
+  font-weight: 800;
 }
 
 [data-theme="light"] .stat-card-label {
   color: #475569;
+  font-weight: 700;
 }
 
+[data-theme="light"] .stat-iter {
+  color: #64748b;
+}
+
+/* 6. View Selector & Entity Bar */
 [data-theme="light"] .view-selector-container,
 [data-theme="light"] .single-grid-container,
 [data-theme="light"] .master-division-section {
   background: #ffffff;
-  border-color: #e2e8f0;
+  border: 1px solid #e2e8f0;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
 
 [data-theme="light"] .view-mode-tabs {
   background: #f1f5f9;
-  border-color: #e2e8f0;
+  border: 1px solid #e2e8f0;
 }
 
 [data-theme="light"] .view-tab {
   color: #475569;
+  font-weight: 600;
 }
 
 [data-theme="light"] .view-tab:hover {
   color: #0f172a;
 }
 
+[data-theme="light"] .view-tab.active {
+  background: #4f46e5 !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3) !important;
+}
+
 [data-theme="light"] .entity-pill {
   background: #f8fafc;
-  border-color: #cbd5e1;
+  border: 1px solid #cbd5e1;
   color: #334155;
+  font-weight: 600;
 }
 
 [data-theme="light"] .entity-pill:hover {
@@ -2161,177 +2342,685 @@
   color: #0f172a;
 }
 
-[data-theme="light"] .entity-dropdown {
-  background: #ffffff;
-  border-color: #cbd5e1;
-  color: #0f172a;
+[data-theme="light"] .entity-pill.active {
+  background: #e0e7ff !important;
+  border-color: #6366f1 !important;
+  color: #312e81 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.25) !important;
 }
 
-[data-theme="light"] .entity-dropdown option {
-  background: #ffffff;
-  color: #0f172a;
+[data-theme="light"] .pill-badge {
+  background: #e2e8f0 !important;
+  color: #475569 !important;
+  font-weight: 600 !important;
 }
 
-[data-theme="light"] .timetable-grid th {
+[data-theme="light"] .entity-pill.active .pill-badge {
+  background: #c7d2fe !important;
+  color: #1e1b4b !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .context-chip {
   background: #f8fafc !important;
-  color: #334155;
-  border-color: #e2e8f0;
+  border: 1px solid #cbd5e1 !important;
+  color: #334155 !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] .context-chip.highlight-chip {
+  background: #eef2ff !important;
+  border-color: #a5b4fc !important;
+  color: #3730a3 !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .workload-val {
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .progress-track {
+  background: #e2e8f0 !important;
+}
+
+[data-theme="light"] .master-legend {
+  color: #334155 !important;
+  font-weight: 600 !important;
+}
+
+/* 7. Timetable Matrix Grid (Headers, Day Labels & Cells) */
+[data-theme="light"] .timetable-grid th {
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
 }
 
 [data-theme="light"] .th-day {
-  background: #f1f5f9 !important;
-  color: #0f172a;
-  border-color: #e2e8f0;
-  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.05);
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.05) !important;
 }
 
 [data-theme="light"] .period-title {
-  color: #0f172a;
+  color: #0f172a !important;
+  font-weight: 800 !important;
 }
 
 [data-theme="light"] .period-time {
-  color: #64748b;
+  color: #475569 !important;
+  font-weight: 600 !important;
 }
 
 [data-theme="light"] .th-break {
-  background: rgba(245, 158, 11, 0.12) !important;
+  background: #fef3c7 !important;
+  border-color: #fcd34d !important;
 }
 
 [data-theme="light"] .th-break .period-title {
-  color: #b45309;
+  color: #92400e !important;
+  font-weight: 800 !important;
 }
 
 [data-theme="light"] .th-break .period-time {
-  color: #92400e;
+  color: #b45309 !important;
+  font-weight: 600 !important;
 }
 
 [data-theme="light"] .td-day-label {
   background: #f1f5f9 !important;
-  color: #0f172a;
-  border-color: #e2e8f0;
-  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.05);
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.05) !important;
+  font-weight: 800 !important;
 }
 
 [data-theme="light"] .timetable-grid td {
-  border-color: #e2e8f0;
+  border: 1px solid #e2e8f0 !important;
 }
 
+[data-theme="light"] .td-break-cell {
+  background: repeating-linear-gradient(
+    45deg,
+    #fffbeb,
+    #fffbeb 10px,
+    #fef3c7 10px,
+    #fef3c7 20px
+  ) !important;
+  border-left: 1.5px solid #d97706 !important;
+  border-right: 1.5px solid #d97706 !important;
+}
+
+[data-theme="light"] .break-cell-content {
+  color: #92400e !important;
+  font-weight: 800 !important;
+}
+
+/* 8. Slot Cards & Badges */
 [data-theme="light"] .slot-card {
-  background: #ffffff;
-  border: 1px solid #cbd5e1;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06) !important;
 }
 
 [data-theme="light"] .slot-card:hover {
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12), 0 0 14px var(--card-accent, rgba(99, 102, 241, 0.3));
-  border-color: var(--card-accent, #6366f1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 0 12px var(--card-accent, rgba(99, 102, 241, 0.3)) !important;
+  border-color: var(--card-accent, #6366f1) !important;
 }
 
 [data-theme="light"] .slot-subject-title {
-  color: #0f172a;
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .session-type-badge {
+  color: #475569 !important;
+  font-weight: 700 !important;
 }
 
 [data-theme="light"] .meta-text {
-  color: #475569;
+  color: #334155 !important;
+  font-weight: 600 !important;
 }
 
 [data-theme="light"] .meta-icon {
-  color: #64748b;
+  color: #64748b !important;
+}
+
+[data-theme="light"] .meta-div-tag {
+  background: #dbeafe !important;
+  color: #1e40af !important;
+  font-weight: 800 !important;
 }
 
 [data-theme="light"] .lab-card {
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%) !important;
 }
 
 [data-theme="light"] .continuation-card {
-  background: #f8fafc;
+  background: #f5f3ff !important;
+  border: 1px dashed #7c3aed !important;
 }
 
 [data-theme="light"] .continuation-content {
-  color: #6d28d9;
+  color: #5b21b6 !important;
+  font-weight: 700 !important;
 }
 
 [data-theme="light"] .empty-slot {
-  border-color: #cbd5e1;
-  color: #94a3b8;
+  background: transparent !important;
+  border: 1.5px dashed #cbd5e1 !important;
+  color: #64748b !important;
+  font-weight: 600 !important;
 }
 
 [data-theme="light"] .empty-slot:hover {
-  background: #f1f5f9;
-  border-color: #94a3b8;
-  color: #475569;
+  background: #f1f5f9 !important;
+  border-color: #6366f1 !important;
+  color: #4338ca !important;
 }
 
+[data-theme="light"] .student-count-tag {
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #334155 !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] .search-box-wrapper {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+[data-theme="light"] .btn-search-clear {
+  background: #e2e8f0 !important;
+  color: #475569 !important;
+}
+
+[data-theme="light"] .btn-search-clear:hover {
+  background: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+/* 9. Modals & Drawers Universal Container */
 [data-theme="light"] .modal-content,
 [data-theme="light"] .drawer-content {
-  background: #ffffff;
-  border-color: #e2e8f0;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
 }
 
 [data-theme="light"] .modal-header,
 [data-theme="light"] .modal-footer,
 [data-theme="light"] .drawer-header,
 [data-theme="light"] .drawer-footer {
-  border-color: #e2e8f0;
+  border-color: #e2e8f0 !important;
+  background: #ffffff !important;
 }
 
-[data-theme="light"] .form-control,
-[data-theme="light"] .table-input,
-[data-theme="light"] .table-select,
-[data-theme="light"] .search-input {
-  background: #f8fafc;
-  border-color: #cbd5e1;
-  color: #0f172a;
+/* 10. Feasibility & Conflict Drawer */
+[data-theme="light"] .metric-stat-card {
+  background: #f8fafc !important;
+  border: 1px solid #cbd5e1 !important;
 }
 
-[data-theme="light"] .search-input:focus {
-  background: #ffffff;
-  border-color: var(--primary);
+[data-theme="light"] .stat-val {
+  color: #0f172a !important;
+  font-weight: 800 !important;
 }
 
-[data-theme="light"] .search-input::placeholder {
-  color: #94a3b8;
+[data-theme="light"] .conflict-card-item {
+  background: #fff1f2 !important;
+  border: 1.5px solid #fecdd3 !important;
+  box-shadow: 0 2px 6px rgba(225, 29, 72, 0.06) !important;
 }
 
+[data-theme="light"] .conflict-type-pill {
+  background: #fee2e2 !important;
+  color: #991b1b !important;
+  border: 1px solid #fca5a5 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .conflict-title {
+  color: #9f1239 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .conflict-message {
+  color: #1e293b !important;
+  font-weight: 500 !important;
+}
+
+[data-theme="light"] .conflict-metric-bar {
+  background: #ffffff !important;
+  border: 1px solid #fecdd3 !important;
+}
+
+[data-theme="light"] .conflict-suggestion-box {
+  background: #eff6ff !important;
+  border: 1px solid #bfdbfe !important;
+  color: #1e3a8a !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] .autofix-section {
+  background: #eef2ff !important;
+  border: 1px solid #c7d2fe !important;
+}
+
+[data-theme="light"] .btn-autofix {
+  background: #ffffff !important;
+  border: 1px solid #818cf8 !important;
+  color: #312e81 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.12) !important;
+}
+
+[data-theme="light"] .btn-autofix:hover {
+  background: #4f46e5 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="light"] .text-danger { color: #b91c1c !important; }
+[data-theme="light"] .text-warning { color: #b45309 !important; }
+[data-theme="light"] .text-primary { color: #4338ca !important; }
+[data-theme="light"] .text-success { color: #15803d !important; }
+
+/* 11. Entities & Rules Modal (DataConfigModal) */
+[data-theme="light"] .config-tabs-bar {
+  background: #f1f5f9 !important;
+  border-bottom: 1px solid #cbd5e1 !important;
+}
+
+[data-theme="light"] .config-tab {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .config-tab:hover {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .config-tab.active {
+  color: #4338ca !important;
+  border-bottom-color: #4338ca !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .config-table th {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+  font-weight: 800 !important;
+  border-bottom: 2px solid #cbd5e1 !important;
+}
+
+[data-theme="light"] .config-table td {
+  border-bottom: 1px solid #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* 12. Manual Rescheduling & Swap Modal */
 [data-theme="light"] .current-slot-summary {
-  background: #f8fafc;
-  border-color: #e2e8f0;
+  background: #f8fafc !important;
+  border: 1px solid #cbd5e1 !important;
+  border-left-width: 4px !important;
 }
 
-[data-theme="light"] .audit-item,
+[data-theme="light"] .code-pill {
+  background: #e0e7ff !important;
+  color: #312e81 !important;
+  border: 1px solid #c7d2fe !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .summary-details-grid {
+  color: #334155 !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] .valid-feedback {
+  background: #dcfce7 !important;
+  border: 1px solid #86efac !important;
+  color: #14532d !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .invalid-feedback {
+  background: #fee2e2 !important;
+  border: 1px solid #fca5a5 !important;
+  color: #7f1d1d !important;
+  font-weight: 700 !important;
+}
+
+/* 13. Institutional Analytics & Audit Modal */
 [data-theme="light"] .kpi-card {
-  background: #f8fafc;
-  border-color: #e2e8f0;
+  background: #f8fafc !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+[data-theme="light"] .kpi-label {
+  color: #475569 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .kpi-value {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .kpi-desc {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .audit-item {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+}
+
+[data-theme="light"] .audit-text strong {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .audit-text span {
+  color: #475569 !important;
 }
 
 [data-theme="light"] .analytics-table th {
-  background: #f1f5f9;
-  color: #475569;
-  border-color: #e2e8f0;
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  font-weight: 800 !important;
+  border: 1px solid #cbd5e1 !important;
 }
 
 [data-theme="light"] .analytics-table td {
-  border-color: #e2e8f0;
-  color: #0f172a;
+  border: 1px solid #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .pill-lab {
+  background: #f3e8ff !important;
+  color: #6b21a8 !important;
+  border: 1px solid #d8b4fe !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .pill-hall {
+  background: #e0f2fe !important;
+  color: #0369a1 !important;
+  border: 1px solid #bae6fd !important;
+  font-weight: 700 !important;
 }
 
 [data-theme="light"] .table-progress-bar {
-  background: #e2e8f0;
+  background: #e2e8f0 !important;
 }
 
-[data-theme="light"] .td-break-cell {
-  background: repeating-linear-gradient(
-    45deg,
-    rgba(245, 158, 11, 0.05),
-    rgba(245, 158, 11, 0.05) 10px,
-    rgba(245, 158, 11, 0.1) 10px,
-    rgba(245, 158, 11, 0.1) 20px
-  );
+[data-theme="light"] .table-progress-text {
+  color: #0f172a !important;
+  font-weight: 700 !important;
 }
 
-[data-theme="light"] .break-cell-content {
-  color: #b45309;
+/* 14. Empty State Control Center */
+[data-theme="light"] .agent-hero-card {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme="light"] .hero-action-card {
+  background: #f8fafc !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+[data-theme="light"] .hero-action-card:hover {
+  background: #ffffff !important;
+  border-color: #4f46e5 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), 0 0 12px rgba(79, 70, 229, 0.15) !important;
+}
+
+[data-theme="light"] .hero-action-card h3 {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .hero-action-card p {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .badge-recom {
+  background: #e0e7ff !important;
+  color: #3730a3 !important;
+  border: 1px solid #a5b4fc !important;
+  font-weight: 700 !important;
+}
+
+/* 15. AI Agent Assistant Modal & Guided Wizard */
+[data-theme="light"] .agent-mode-tabs {
+  background: #f1f5f9 !important;
+  border-bottom: 1px solid #cbd5e1 !important;
+}
+
+[data-theme="light"] .agent-tab-btn {
+  color: #475569 !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] .agent-tab-btn:hover {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .agent-tab-btn.active {
+  background: #4f46e5 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="light"] .agent-chat-intro {
+  background: #eef2ff !important;
+  border: 1px solid #c7d2fe !important;
+  color: #312e81 !important;
+  font-weight: 500 !important;
+}
+
+[data-theme="light"] .btn-sugg {
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #334155 !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] .btn-sugg:hover {
+  background: #e0e7ff !important;
+  color: #312e81 !important;
+  border-color: #818cf8 !important;
+}
+
+[data-theme="light"] .extracted-preview-box {
+  background: #f0fdf4 !important;
+  border: 1.5px solid #86efac !important;
+}
+
+[data-theme="light"] .dept-tag {
+  background: #dcfce7 !important;
+  color: #166534 !important;
+  border: 1px solid #bbf7d0 !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .feasibility-pill {
+  background: #dcfce7 !important;
+  color: #15803d !important;
+  border: 1px solid #86efac !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .summary-pill {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="light"] .wizard-progress-bar {
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+[data-theme="light"] .wizard-step-node {
+  color: #475569 !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] .wizard-step-node span {
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .wizard-step-node.active {
+  color: #3730a3 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .wizard-step-node.active span {
+  background: #4f46e5 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="light"] .wizard-item-card {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+}
+
+[data-theme="light"] .template-card {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+[data-theme="light"] .template-card:hover {
+  background: #f8fafc !important;
+  border-color: #4f46e5 !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme="light"] .t-info strong {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .t-info span {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .wizard-nav-footer {
+  border-top: 1px solid #cbd5e1 !important;
+}
+
+/* 16. Print Studio Modal Controls & Preview Pane */
+[data-theme="light"] .print-controls-pane {
+  background: #ffffff !important;
+  border-right: 1px solid #cbd5e1 !important;
+}
+
+[data-theme="light"] .scope-radio-card {
+  background: #f8fafc !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+[data-theme="light"] .scope-radio-card:hover {
+  background: #f1f5f9 !important;
+  border-color: #94a3b8 !important;
+}
+
+[data-theme="light"] .scope-radio-card.selected {
+  background: #eef2ff !important;
+  border-color: #4f46e5 !important;
+}
+
+[data-theme="light"] .scope-radio-card strong {
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .scope-radio-card span {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .checkbox-item {
+  background: #f8fafc !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+[data-theme="light"] .checkbox-item:hover {
+  background: #f1f5f9 !important;
+  border-color: #94a3b8 !important;
+}
+
+[data-theme="light"] .checkbox-item strong {
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .checkbox-item span {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .print-preview-pane {
+  background: #e2e8f0 !important;
+}
+
+[data-theme="light"] .preview-toolbar {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .preview-label {
+  color: #3730a3 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .preview-paper-sheet {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12) !important;
+}
+
+[data-theme="light"] .print-modal-footer {
+  background: #f8fafc !important;
+  border-top: 1px solid #cbd5e1 !important;
+}
+
+[data-theme="light"] .print-studio-tabs {
+  background: #f1f5f9 !important;
+  border-bottom: 1px solid #cbd5e1 !important;
+}
+
+[data-theme="light"] .studio-tab {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .studio-tab.active {
+  background: #4f46e5 !important;
+  color: #ffffff !important;
+}
+
+/* 17. Floating AI Evolution Toast Notification */
+[data-theme="light"] .ai-evolution-toast {
+  background: #ffffff !important;
+  border: 1.5px solid #4f46e5 !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15) !important;
+}
+
+[data-theme="light"] .toast-text strong {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .toast-text span {
+  color: #475569 !important;
 }
 
 /* =========================================
