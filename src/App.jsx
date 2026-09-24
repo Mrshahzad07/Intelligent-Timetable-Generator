@@ -8,6 +8,8 @@ import FeasibilityDrawer from './components/FeasibilityDrawer';
 import ManualSwapModal from './components/ManualSwapModal';
 import DataConfigModal from './components/DataConfigModal';
 import AnalyticsModal from './components/AnalyticsModal';
+import PrintSheetModal from './components/PrintSheetModal';
+import PrintableTimetableSheet from './components/PrintableTimetableSheet';
 
 import { DEFAULT_CONFIG, ROOM_TYPES, SUBJECT_TYPES } from './data/models';
 import { ALL_PRESETS, PRESET_ENGINEERING, PRESET_IMPOSSIBLE_CONFLICTS } from './data/presets';
@@ -53,7 +55,27 @@ export default function App() {
   const [isFeasibilityOpen, setIsFeasibilityOpen] = useState(false);
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
+  const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
   const [selectedSlotForEdit, setSelectedSlotForEdit] = useState(null);
+
+  // Customized Print Settings
+  const [printSettings, setPrintSettings] = useState({
+    collegeName: 'APEX INSTITUTE OF TECHNOLOGY & ENGINEERING',
+    departmentName: 'DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING',
+    academicTerm: 'Autumn Semester 2026–2027',
+    academicYear: '2026–2027',
+    effectiveDate: 'October 1, 2026',
+    advisorName: 'Dr. Eleanor Vance (Class Coordinator)',
+    coordinatorName: 'Prof. Marcus Brody',
+    hodName: 'Dr. Alan Turing',
+    deanName: 'Dr. H. Vance',
+    includeSubjectLegend: true,
+    includeRoomLegend: true,
+    includeRules: true,
+    includeSignatures: true,
+    customNotes: 'Students must strictly follow laboratory safety protocols and wear prescribed laboratory coats in CL-01 and CL-02.',
+    targetScope: 'current'
+  });
 
   // Feasibility Check
   const feasibility = useMemo(() => {
@@ -197,7 +219,7 @@ export default function App() {
         onOpenAnalyticsModal={() => setIsAnalyticsOpen(true)}
         onExportCSV={() => exportToCSV(timetable, { divisions, rooms, faculty, subjects, config })}
         onExportJSON={() => exportToJSON({ divisions, rooms, faculty, subjects, config, timetable })}
-        onPrint={triggerPrint}
+        onPrint={() => setIsPrintModalOpen(true)}
         hasTimetable={timetable.length > 0}
         theme={theme}
         onToggleTheme={handleToggleTheme}
@@ -296,6 +318,42 @@ export default function App() {
         divisions={divisions}
         config={config}
       />
+
+      {/* Institutional Timetable Print & PDF Studio Modal */}
+      <PrintSheetModal
+        isOpen={isPrintModalOpen}
+        onClose={() => setIsPrintModalOpen(false)}
+        divisions={divisions}
+        rooms={rooms}
+        faculty={faculty}
+        subjects={subjects}
+        config={config}
+        timetable={timetable}
+        viewMode={viewMode}
+        selectedDivisionId={selectedDivisionId}
+        selectedFacultyId={selectedFacultyId}
+        selectedRoomId={selectedRoomId}
+        printSettings={printSettings}
+        setPrintSettings={setPrintSettings}
+      />
+
+      {/* Dedicated Physical Print Sheet Root (Activated during window.print()) */}
+      <div id="print-sheet-root" className="print-sheet-root">
+        <PrintableTimetableSheet
+          divisions={divisions}
+          rooms={rooms}
+          faculty={faculty}
+          subjects={subjects}
+          config={config}
+          timetable={timetable}
+          viewMode={viewMode}
+          selectedDivisionId={selectedDivisionId}
+          selectedFacultyId={selectedFacultyId}
+          selectedRoomId={selectedRoomId}
+          printSettings={printSettings}
+          isPreview={false}
+        />
+      </div>
     </div>
   );
 }

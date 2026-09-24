@@ -2335,40 +2335,853 @@
 }
 
 /* =========================================
-   9. PRINT STYLES FOR NOTICES & PDF
+   9. PRINT STUDIO MODAL & LIVE A4 PREVIEW
+   ========================================= */
+.print-modal-overlay {
+  z-index: 60;
+  backdrop-filter: blur(8px);
+}
+
+.print-studio-modal {
+  max-width: 1300px;
+  width: 95vw;
+  height: 90vh;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.print-modal-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: rgba(99, 102, 241, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.print-studio-tabs {
+  display: none;
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0.4rem 1rem;
+  gap: 0.5rem;
+}
+
+.studio-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.studio-tab.active {
+  background: var(--primary);
+  color: white;
+}
+
+.print-studio-body {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  padding: 0;
+  overflow: hidden;
+  flex: 1;
+}
+
+.print-controls-pane {
+  padding: 1.25rem 1.5rem;
+  overflow-y: auto;
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  background: var(--bg-secondary);
+}
+
+.config-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.config-group-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.scope-radio-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.scope-radio-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: var(--radius-sm);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.scope-radio-card:hover {
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+.scope-radio-card.selected {
+  border-color: var(--primary);
+  background: rgba(99, 102, 241, 0.12);
+}
+
+.scope-radio-card input {
+  margin-top: 3px;
+  cursor: pointer;
+}
+
+.scope-radio-card strong {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--text-main);
+}
+
+.scope-radio-card span {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.control-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.control-row-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+
+.control-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.control-field label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.checkboxes-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.checkbox-item:hover {
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+.checkbox-item input {
+  margin-top: 3px;
+  cursor: pointer;
+}
+
+.checkbox-item strong {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--text-main);
+}
+
+.checkbox-item span {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+}
+
+.textarea-custom {
+  font-size: 0.78rem;
+  resize: vertical;
+}
+
+/* Right Preview Pane */
+.print-preview-pane {
+  background: #090d16;
+  overflow-y: auto;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.preview-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.preview-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  color: #c7d2fe;
+}
+
+.preview-paper-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.preview-paper-sheet {
+  background: white;
+  color: #0f172a;
+  border-radius: 4px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+  width: 100%;
+  max-width: 950px;
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+}
+
+/* Print Modal Footer */
+.print-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.5rem;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-subtle);
+  gap: 1rem;
+}
+
+.print-hint-text {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.print-footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+
+.btn-print-now {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.btn-print-now:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-1px);
+}
+
+/* =========================================
+   10. PRINTABLE TIMETABLE SHEET LAYOUT
+   ========================================= */
+.print-sheet-root {
+  display: none; /* Hidden on normal screen view, only active during print */
+}
+
+.print-division-sheet {
+  background: white;
+  color: #0f172a;
+  font-family: var(--font-sans);
+  padding: 0.25rem;
+  page-break-after: always;
+}
+
+.print-division-sheet:last-child {
+  page-break-after: auto;
+}
+
+/* 1. Letterhead */
+.print-letterhead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #0f172a;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+  gap: 1rem;
+}
+
+.crest-emblem {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.print-header-center {
+  text-align: center;
+  flex: 1;
+}
+
+.print-college-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+  margin: 0;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.print-dept-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #334155;
+  margin: 0.15rem 0;
+  text-transform: uppercase;
+}
+
+.print-term-sub {
+  font-size: 0.72rem;
+  color: #475569;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.dot-sep {
+  color: #94a3b8;
+}
+
+.official-stamp-box {
+  border: 1.5px solid #0f172a;
+  border-radius: 4px;
+  padding: 0.3rem 0.5rem;
+  text-align: center;
+  min-width: 140px;
+}
+
+.stamp-title {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: 0.05em;
+}
+
+.stamp-sub {
+  display: block;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #059669;
+}
+
+.stamp-code {
+  display: block;
+  font-size: 0.58rem;
+  color: #475569;
+  font-family: var(--font-mono);
+}
+
+/* 2. Metadata Banner */
+.print-meta-banner {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 0.4rem 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.55rem;
+  font-size: 0.75rem;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.meta-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.banner-primary-tag strong, .banner-sub-tag strong {
+  color: #0f172a;
+}
+
+.meta-banner-right {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.m-label {
+  color: #64748b;
+  font-size: 0.68rem;
+  margin-right: 0.3rem;
+}
+
+.m-val {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+/* 3. Main Matrix Grid */
+.print-table-wrapper {
+  margin-bottom: 0.65rem;
+}
+
+.print-timetable-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 0.72rem;
+  border: 1.5px solid #0f172a;
+}
+
+.print-timetable-matrix th {
+  background: #e2e8f0;
+  border: 1px solid #64748b;
+  padding: 0.35rem 0.25rem;
+  text-align: center;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.pth-day {
+  width: 75px;
+  background: #cbd5e1 !important;
+}
+
+.pth-title {
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.pth-time {
+  font-size: 0.62rem;
+  font-family: var(--font-mono);
+  color: #334155;
+}
+
+.pth-break {
+  width: 72px;
+  background: #fef3c7 !important;
+  color: #92400e !important;
+}
+
+.print-timetable-matrix td {
+  border: 1px solid #94a3b8;
+  padding: 0.25rem;
+  vertical-align: top;
+  height: 68px;
+}
+
+.ptd-day-label {
+  background: #f1f5f9;
+  text-align: center;
+  vertical-align: middle !important;
+  font-weight: 800;
+  color: #0f172a;
+  font-size: 0.75rem;
+}
+
+.ptd-break-cell {
+  background: #fffbeb;
+  text-align: center;
+  vertical-align: middle !important;
+  color: #b45309;
+  font-weight: 700;
+  font-size: 0.68rem;
+  border-left: 1.5px solid #d97706;
+  border-right: 1.5px solid #d97706;
+}
+
+.ptd-break-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  letter-spacing: 0.08em;
+  font-size: 0.68rem;
+  margin: 0 auto;
+}
+
+.ptd-empty-cell {
+  background: #ffffff;
+  text-align: center;
+  vertical-align: middle !important;
+  color: #94a3b8;
+}
+
+.empty-dash {
+  font-size: 1rem;
+  display: block;
+}
+
+.empty-sub {
+  font-size: 0.6rem;
+  color: #94a3b8;
+}
+
+.ptd-slot-cell {
+  background: #ffffff;
+}
+
+.ptd-cell-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  gap: 0.15rem;
+}
+
+.ptd-code-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.2rem;
+}
+
+.ptd-code-pill {
+  font-weight: 800;
+  font-size: 0.68rem;
+  color: #1e1b4b;
+  font-family: var(--font-mono);
+  background: #e0e7ff;
+  padding: 0.05rem 0.25rem;
+  border-radius: 2px;
+}
+
+.ptd-div-badge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #1d4ed8;
+  background: #dbeafe;
+  padding: 0.05rem 0.25rem;
+  border-radius: 2px;
+}
+
+.ptd-type-pill {
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+.ptd-subject-name {
+  font-weight: 700;
+  font-size: 0.72rem;
+  color: #0f172a;
+  line-height: 1.15;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ptd-footer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.08rem;
+  font-size: 0.64rem;
+  color: #334155;
+}
+
+.ptd-fac-name, .ptd-room-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ptd-lab-slot {
+  background: #faf5ff;
+  border-left: 3px solid #7c3aed !important;
+}
+
+.ptd-theory-slot {
+  border-left: 3px solid #2563eb !important;
+}
+
+.ptd-lab-contd {
+  background: #f5f3ff;
+  border-left: 3px dashed #7c3aed !important;
+}
+
+.ptd-contd-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  gap: 0.15rem;
+}
+
+.contd-badge {
+  font-size: 0.58rem;
+  font-weight: 800;
+  color: #6d28d9;
+}
+
+.contd-title {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #3b0764;
+}
+
+.contd-loc {
+  font-size: 0.62rem;
+  color: #581c87;
+}
+
+/* 4. Customized Bottom Sections */
+.print-section {
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 0.45rem 0.6rem;
+  margin-bottom: 0.5rem;
+  background: #ffffff;
+  page-break-inside: avoid;
+}
+
+.print-section-header {
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 0.35rem 0;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.sec-sub {
+  font-size: 0.64rem;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.print-legend-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.68rem;
+}
+
+.print-legend-table th {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  padding: 0.2rem 0.35rem;
+  text-align: left;
+  font-weight: 700;
+  color: #334155;
+}
+
+.print-legend-table td {
+  border: 1px solid #cbd5e1;
+  padding: 0.2rem 0.35rem;
+  color: #0f172a;
+}
+
+.print-badge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 0.05rem 0.3rem;
+  border-radius: 3px;
+}
+
+.badge-lab {
+  background: #f3e8ff;
+  color: #6b21a8;
+}
+
+.badge-theory {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.print-infra-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  font-size: 0.66rem;
+}
+
+.print-infra-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 3px;
+  padding: 0.25rem 0.4rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.print-rules-content {
+  font-size: 0.66rem;
+  color: #334155;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  line-height: 1.35;
+}
+
+.print-rules-content p {
+  margin: 0;
+}
+
+.print-custom-note {
+  color: #1e3a8a;
+  background: #eff6ff;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+}
+
+/* 5. Signatures Block */
+.print-signatures-block {
+  border: none;
+  padding: 0.4rem 0.25rem 0.2rem 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.signatures-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  text-align: center;
+}
+
+.signature-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sig-line {
+  width: 80%;
+  border-bottom: 1.5px solid #0f172a;
+  margin-bottom: 0.35rem;
+  height: 28px;
+}
+
+.sig-name {
+  font-weight: 800;
+  font-size: 0.72rem;
+  color: #0f172a;
+}
+
+.sig-title {
+  font-size: 0.64rem;
+  color: #475569;
+}
+
+.sig-date {
+  font-size: 0.6rem;
+  color: #64748b;
+  margin-top: 0.1rem;
+}
+
+/* Document Footer */
+.print-doc-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.58rem;
+  color: #64748b;
+  border-top: 1px solid #cbd5e1;
+  padding-top: 0.25rem;
+  margin-top: 0.35rem;
+}
+
+/* =========================================
+   11. PHYSICAL BROWSER PRINT ENGINE (@media print)
    ========================================= */
 @media print {
-  body {
-    background: white !important;
-    color: black !important;
+  @page {
+    size: A4 landscape;
+    margin: 8mm 10mm 8mm 10mm;
   }
 
-  .navbar, .view-selector-container, .stats-dashboard-bar, .empty-add-icon, .btn {
+  html, body {
+    background: white !important;
+    color: black !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide entire interactive Web UI */
+  .navbar,
+  .main-content,
+  .modal-overlay,
+  .drawer-overlay,
+  .view-selector-container,
+  .stats-dashboard-bar,
+  .empty-add-icon,
+  .btn,
+  .banner-icon,
+  .unallocated-banner {
     display: none !important;
   }
 
-  .timetable-grid {
-    border: 1px solid #333 !important;
+  /* Show ONLY the designated print sheet root */
+  .print-sheet-root {
+    display: block !important;
+    width: 100% !important;
   }
 
-  .timetable-grid th, .timetable-grid td {
-    border: 1px solid #999 !important;
-    color: black !important;
+  .print-division-sheet {
+    page-break-after: always;
+    page-break-inside: avoid;
+    margin-bottom: 0;
   }
 
-  .slot-card {
-    background: #f8fafc !important;
-    color: black !important;
-    border: 1px solid #94a3b8 !important;
-    box-shadow: none !important;
+  .print-division-sheet:last-child {
+    page-break-after: auto;
   }
 
-  .slot-subject-title {
-    color: black !important;
+  .print-section {
+    page-break-inside: avoid;
   }
 
-  .meta-text, .meta-icon {
-    color: #475569 !important;
+  .print-timetable-matrix {
+    page-break-inside: avoid;
+  }
+
+  .print-signatures-block {
+    page-break-inside: avoid;
   }
 }
 
@@ -2393,6 +3206,18 @@
   }
   .preset-select {
     max-width: 190px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .print-studio-tabs {
+    display: flex;
+  }
+  .print-studio-body {
+    grid-template-columns: 1fr;
+  }
+  .pane-hidden-mobile {
+    display: none !important;
   }
 }
 
