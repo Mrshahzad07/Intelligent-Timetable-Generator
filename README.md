@@ -192,3 +192,13 @@ To stand out among all submissions, ChronosAI introduces unique production-grade
    - Real-time room occupancy and seating utilization breakdown with animated progress bars.
    - Multi-objective fitness distribution scoring (98%+ satisfaction).
 
+5. **Institutional Print & PDF Export Studio**:
+   - Dedicated print studio with live A4 Landscape sheet preview before printing.
+   - Fully customizable institutional letterhead (College Name, Department, Academic Term, Effective Date, Advisor).
+   - Toggleable customized sections:
+     - **Section 1**: Complete Course & Faculty Allocation Directory (Course codes, credits, weekly hours, faculty in charge).
+     - **Section 2**: Allocated Facilities & Laboratory Venues (seating capacities and lab equipment blocks).
+     - **Section 3**: Institutional Directives & Mandatory Attendance Policy (85% regulation, lab rules, custom notes).
+     - **Section 4**: Three-Tier Official Sign-Off Block (Timetable Coordinator, HOD CSE, and Dean/Principal seal).
+   - Hardened `@media print` CSS engine: produces pixel-perfect, clean black/white landscape sheets on physical paper or PDF with zero UI clutter.
+
