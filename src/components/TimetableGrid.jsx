@@ -122,7 +122,7 @@ export default function TimetableGrid({
                       <th className="th-day">Day</th>
                       {config.periods.map(p => (
                         <th key={p.index} className={`th-period ${p.isBreak ? 'th-break' : ''}`}>
-                          <div className="period-title">{p.name}</div>
+                          <div className="period-title">{p.isBreak ? 'Lunch' : p.name}</div>
                           <div className="period-time">{p.time}</div>
                         </th>
                       ))}
@@ -197,7 +197,7 @@ export default function TimetableGrid({
                   <th className="th-day">Day</th>
                   {config.periods.map(p => (
                     <th key={p.index} className={`th-period ${p.isBreak ? 'th-break' : ''}`}>
-                      <div className="period-title">{p.name}</div>
+                      <div className="period-title">{p.isBreak ? 'Lunch' : p.name}</div>
                       <div className="period-time">{p.time}</div>
                     </th>
                   ))}

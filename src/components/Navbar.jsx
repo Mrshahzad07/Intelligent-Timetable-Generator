@@ -1,13 +1,11 @@
 import React from 'react';
 import { 
   Sparkles, 
-  AlertTriangle, 
   CheckCircle2, 
   Download, 
   Printer, 
   RefreshCw, 
   Sliders, 
-  FileText,
   ShieldAlert
 } from 'lucide-react';
 
@@ -21,7 +19,6 @@ export default function Navbar({
   onOpenFeasibilityDrawer,
   onOpenConfigModal,
   onExportCSV,
-  onExportJSON,
   onPrint,
   hasTimetable
 }) {
@@ -31,18 +28,18 @@ export default function Navbar({
         {/* Brand / Logo */}
         <div className="navbar-brand">
           <div className="brand-icon">
-            <Sparkles size={22} className="sparkle-anim" />
+            <Sparkles size={20} className="sparkle-anim" />
           </div>
           <div className="brand-text">
             <span className="brand-title">ChronosAI</span>
-            <span className="brand-subtitle">Intelligent College Timetable Generator</span>
+            <span className="brand-subtitle">College Timetable Generator</span>
           </div>
         </div>
 
-        {/* Preset Selector */}
+        {/* Preset Selector & Feasibility Status */}
         <div className="navbar-center">
           <div className="preset-selector-wrapper">
-            <label className="preset-label">Scenario Preset:</label>
+            <label className="preset-label">Scenario:</label>
             <select
               className="preset-select"
               value={currentPresetId}
@@ -51,7 +48,7 @@ export default function Navbar({
             >
               {presets.map(p => (
                 <option key={p.id} value={p.id}>
-                  {p.name} {!p.isFeasible ? '⚠️ (Impossible Constraints)' : '✅'}
+                  {p.name} {!p.isFeasible ? '⚠️ (Impossible)' : '✅'}
                 </option>
               ))}
             </select>
@@ -66,13 +63,15 @@ export default function Navbar({
             >
               {feasibility.isFeasible ? (
                 <>
-                  <CheckCircle2 size={16} />
-                  <span>Constraints Feasible</span>
+                  <CheckCircle2 size={15} />
+                  <span className="badge-text-full">Constraints Feasible</span>
+                  <span className="badge-text-short">Feasible</span>
                 </>
               ) : (
                 <>
-                  <ShieldAlert size={16} className="pulse-alert" />
-                  <span>{feasibility.criticalErrors.length} Impossible Conflicts</span>
+                  <ShieldAlert size={15} className="pulse-alert" />
+                  <span className="badge-text-full">{feasibility.criticalErrors.length} Impossible Conflicts</span>
+                  <span className="badge-text-short">{feasibility.criticalErrors.length} Conflicts</span>
                 </>
               )}
             </button>
@@ -86,20 +85,31 @@ export default function Navbar({
             onClick={onOpenConfigModal}
             title="Configure college entities, teachers, and rooms"
           >
-            <Sliders size={16} />
-            <span>Entities & Rules</span>
+            <Sliders size={15} />
+            <span className="btn-text-full">Entities & Rules</span>
+            <span className="btn-text-short">Rules</span>
           </button>
 
-          <div className="export-dropdown-wrapper">
-            <button className="btn btn-secondary" onClick={onExportCSV} disabled={!hasTimetable} title="Export timetable as CSV">
-              <Download size={16} />
-              <span>Export CSV</span>
-            </button>
-          </div>
+          <button 
+            className="btn btn-secondary" 
+            onClick={onExportCSV} 
+            disabled={!hasTimetable} 
+            title="Export timetable as CSV"
+          >
+            <Download size={15} />
+            <span className="btn-text-full">Export CSV</span>
+            <span className="btn-text-short">CSV</span>
+          </button>
 
-          <button className="btn btn-secondary" onClick={onPrint} disabled={!hasTimetable} title="Print or save as PDF">
-            <Printer size={16} />
-            <span>Print / PDF</span>
+          <button 
+            className="btn btn-secondary" 
+            onClick={onPrint} 
+            disabled={!hasTimetable} 
+            title="Print or save as PDF"
+          >
+            <Printer size={15} />
+            <span className="btn-text-full">Print / PDF</span>
+            <span className="btn-text-short">Print</span>
           </button>
 
           <button
@@ -109,13 +119,14 @@ export default function Navbar({
           >
             {isSolving ? (
               <>
-                <RefreshCw size={18} className="spin" />
-                <span>Solving CSP...</span>
+                <RefreshCw size={16} className="spin" />
+                <span>Solving...</span>
               </>
             ) : (
               <>
-                <Sparkles size={18} />
-                <span>Generate Timetable</span>
+                <Sparkles size={16} />
+                <span className="btn-text-full">Generate Timetable</span>
+                <span className="btn-text-short">Generate</span>
               </>
             )}
           </button>
