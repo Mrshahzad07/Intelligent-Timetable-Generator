@@ -100,11 +100,46 @@ graph TD
 - **`src/solver/geneticAlgorithmSolver.js`**: Evolutionary Genetic Algorithm optimizer implementing chromosome representation, tournament selection, crossover, and legal slot mutation across generations.
 - **`src/solver/fitnessEvaluator.js`**: Multi-objective quality scoring function evaluating teacher fatigue, subject daily spread, student schedule holes, and room utilization.
 - **`src/solver/conflictValidator.js`**: Real-time interactive validator preventing double-bookings and constraint breaches during manual moves.
+- **`src/data/authProfiles.js`**: Campus user roles (`admin`, `faculty`, `student`), permissions model, and authentication logic.
+- **`src/components/LoginPage.jsx`**: Full-screen institutional login gateway with 3 selectable profile options and manual credential verification.
+- **`src/components/SwitchProfileAuthModal.jsx`**: Security authentication modal prompting for credentials before switching profiles.
+- **`src/components/AddSubjectModal.jsx`**: Structured card-based modal allowing faculty and principals to manually schedule a subject into any classroom slot with real-time conflict detection.
+- **`src/components/LectureDetailsModal.jsx`**: Student-friendly inspection modal displaying comprehensive lecture, room, instructor, and schedule details without edit controls.
 - **`src/components/AIAgentAssistantModal.jsx`**: Autonomous natural language prompt parser, department presets, and 5-step conversational setup wizard.
 - **`src/components/EmptyStateControlCenter.jsx`**: Zero-dummy-data onboarding canvas with instant AI agent launch, manual custom builder, and quick-start department templates.
 - **`src/components/PrintSheetModal.jsx` & `src/components/PrintableTimetableSheet.jsx`**: Configurable A4 landscape print preview with letterhead customization and toggleable legend/regulation sections.
 - **`src/components/AnalyticsModal.jsx`**: Institutional audit modal displaying hard invariant validation, room utilization, and fitness distribution.
-- **`src/components/TimetableGrid.jsx` & `src/components/SlotCard.jsx`**: Grid layout with tactile 3D hover animations, glassmorphism shimmer, and live search spotlight halo.
+- **`src/components/TimetableGrid.jsx` & `src/components/SlotCard.jsx`**: Grid layout with tactile 3D hover animations, glassmorphism shimmer, interactive '+' add buttons on free slots, and live search spotlight halo.
+
+---
+
+## 2.1 Role-Based Access Control & Campus Credentials
+
+ChronosAI provides three distinct campus user profiles tailored to institutional hierarchies:
+
+| Profile | Role Name | Campus Email / Username | Password | Key Permissions & Capabilities |
+| :--- | :--- | :--- | :--- | :--- |
+| **🛡️ Principal / Admin** | `Dr. Alan Turing` | `admin@campus.edu` (`admin`) | `admin123` | **Full Administrative Authority**: Generate timetables, modify entities & constraints, run AI solver, audit stats, export CSV/PDF, edit/delete any slot, and manually schedule subjects. |
+| **👨‍🏫 Faculty Member** | `Prof. Marcus Brody` | `faculty@campus.edu` (`faculty`) | `faculty123` | **Academic Authority**: View all timetable dimensions, inspect teaching load, **manually add particular subjects for their classroom via (+) slot icons**, reschedule sessions, and export/print. |
+| **🎓 Student** | `Alex Chen` | `student@campus.edu` (`student`) | `student123` | **Student Portal**: Clean read-only division timetable, room & instructor guidance, course details inspection, search & course highlight, personal schedule export/print. (Add/edit controls disabled). |
+
+### Campus Authentication & Security:
+- **Dedicated Full-Screen Login Gateway**: Unauthenticated users arrive at a clean full-screen portal where they select their role (Principal/Admin, Faculty, Student) and manually enter their credentials.
+- **Zero Default Data / No Exposed Credentials**: All credentials remain securely validated in the backend with no plain-text cheat sheets or pre-filled forms.
+- **Protected Profile Switching**: Switching profiles requires entering valid credentials for the target role, preventing unauthorized access across accounts.
+
+### Manual Subject Addition for Classrooms:
+Following automated timetable generation:
+1. Faculty members and Administrators can hover over any free slot in the timetable (in Division, Faculty, Room, or Master views) to reveal the interactive **`+` (Add Subject)** icon.
+2. Clicking the `+` icon (or the **`+ Add Subject to Classroom`** toolbar button) opens the **Add Subject to Timetable** modal.
+3. The modal pre-fills the clicked Day, Period, and Classroom/Division, and allows selecting:
+   - **Target Classroom / Division** (e.g. CSE-A, CSE-B).
+   - **Subject** (from division curriculum or custom ad-hoc seminar/tutorial).
+   - **Assigned Faculty** (defaults to course teacher or current faculty member).
+   - **Classroom / Lab** (with automatic suitability filtering and an **Auto-pick Free Room** helper).
+   - **Duration** (1-hour theory or 2-hour lab block).
+   - **Session Notes** (optional topic, tutorial, or syllabus notes).
+4. **Live Conflict Validator**: The engine checks teacher double-booking, room clashes, class conflicts, and break collisions in real time before scheduling. Upon clicking **"Add to Timetable"**, the session is immediately placed into the timetable grid and quality metrics are recalculated dynamically!
 
 ---
 

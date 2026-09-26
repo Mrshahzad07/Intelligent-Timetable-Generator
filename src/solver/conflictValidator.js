@@ -130,3 +130,134 @@ export function validateSlotMove({
     conflicts
   };
 }
+
+/**
+ * Validates scheduling a new subject/class slot into the timetable.
+ * Checks teacher clashes, room clashes, division clashes, lunch collision, and capacity.
+ */
+export function validateNewSlot({
+  divisionId,
+  subjectId,
+  facultyId,
+  roomId,
+  day,
+  period,
+  duration = 1,
+  timetable,
+  divisions,
+  rooms,
+  faculty,
+  subjects,
+  config
+}) {
+  const conflicts = [];
+  const maxPeriod = Math.max(...config.periods.map(p => p.index));
+
+  const divisionMap = new Map(divisions.map(d => [d.id, d]));
+  const roomMap = new Map(rooms.map(r => [r.id, r]));
+  const facultyMap = new Map(faculty.map(f => [f.id, f]));
+  const subjectMap = new Map(subjects.map(s => [s.id, s]));
+
+  const currentSubject = subjectMap.get(subjectId);
+  const currentFaculty = facultyMap.get(facultyId);
+  const currentDivision = divisionMap.get(divisionId);
+  const targetRoom = roomMap.get(roomId);
+
+  // 1. Boundary & Lunch Break Check
+  for (let offset = 0; offset < duration; offset++) {
+    const pt = period + offset;
+    if (pt > maxPeriod) {
+      conflicts.push({
+        type: 'OUT_OF_BOUNDS',
+        message: `Session extends beyond the academic day (Period ${pt} > ${maxPeriod}).`
+      });
+      break;
+    }
+    const periodConf = config.periods.find(p => p.index === pt);
+    if (periodConf?.isBreak) {
+      conflicts.push({
+        type: 'BREAK_COLLISION',
+        message: `Overlaps with ${periodConf.name}. Classes cannot take place during lunch break.`
+      });
+    }
+  }
+
+  // 2. Room Type & Capacity Suitability
+  if (targetRoom && currentSubject) {
+    if (currentSubject.preferredRoomType === ROOM_TYPES.LAB && targetRoom.type !== ROOM_TYPES.LAB) {
+      conflicts.push({
+        type: 'ROOM_TYPE_MISMATCH',
+        message: `Subject ${currentSubject.name} is a Laboratory practical and requires a Lab room, but ${targetRoom.name} is a ${targetRoom.type}.`
+      });
+    }
+    if (currentDivision && targetRoom.capacity < currentDivision.studentCount) {
+      conflicts.push({
+        type: 'CAPACITY_DEFICIT',
+        message: `Room ${targetRoom.name} (Cap: ${targetRoom.capacity}) is too small for ${currentDivision.shortCode || currentDivision.name} (${currentDivision.studentCount} students).`
+      });
+    }
+  }
+
+  // 3. Faculty Unavailability
+  for (let offset = 0; offset < duration; offset++) {
+    const pt = period + offset;
+    const isUnavail = (currentFaculty?.unavailableSlots || []).some(
+      un => (un.day === day || day.startsWith(un.day)) && un.period === pt
+    );
+    if (isUnavail) {
+      conflicts.push({
+        type: 'FACULTY_UNAVAILABLE',
+        message: `${currentFaculty?.name} has declared unavailability on ${day} at Period ${pt}.`
+      });
+    }
+  }
+
+  // 4. Overlap with existing timetable allocations
+  for (const other of timetable) {
+    if (other.day !== day) continue;
+
+    const otherStart = other.period;
+    const otherEnd = other.period + (other.duration || 1) - 1;
+    const myStart = period;
+    const myEnd = period + duration - 1;
+
+    const hasOverlap = Math.max(myStart, otherStart) <= Math.min(myEnd, otherEnd);
+
+    if (hasOverlap) {
+      const otherSub = subjectMap.get(other.subjectId);
+      const otherFac = facultyMap.get(other.facultyId);
+      const otherDiv = divisionMap.get(other.divisionId);
+      const otherRm = roomMap.get(other.roomId);
+
+      // Teacher clash
+      if (other.facultyId === facultyId) {
+        conflicts.push({
+          type: 'TEACHER_CONFLICT',
+          message: `${currentFaculty?.name || 'Faculty'} is already teaching ${otherSub?.name || 'another class'} for ${otherDiv?.shortCode || 'another division'} at Period ${other.period}.`
+        });
+      }
+
+      // Division clash
+      if (other.divisionId === divisionId) {
+        conflicts.push({
+          type: 'DIVISION_CONFLICT',
+          message: `${currentDivision?.shortCode || 'Classroom'} already has ${otherSub?.name || 'a session'} scheduled in Period ${other.period}.`
+        });
+      }
+
+      // Room clash
+      if (other.roomId === roomId) {
+        conflicts.push({
+          type: 'ROOM_CONFLICT',
+          message: `Room ${targetRoom?.name || 'Selected Room'} is occupied by ${otherDiv?.shortCode || 'another division'} (${otherSub?.name || 'class'}) at Period ${other.period}.`
+        });
+      }
+    }
+  }
+
+  return {
+    isValid: conflicts.length === 0,
+    conflicts
+  };
+}
+

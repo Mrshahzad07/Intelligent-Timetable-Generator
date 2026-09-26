@@ -11,13 +11,19 @@ import PrintSheetModal from './components/PrintSheetModal';
 import PrintableTimetableSheet from './components/PrintableTimetableSheet';
 import AIAgentAssistantModal from './components/AIAgentAssistantModal';
 import EmptyStateControlCenter from './components/EmptyStateControlCenter';
+import LoginPage from './components/LoginPage';
+import AddSubjectModal from './components/AddSubjectModal';
+import LectureDetailsModal from './components/LectureDetailsModal';
+import SwitchProfileAuthModal from './components/SwitchProfileAuthModal';
 
-import { DEFAULT_CONFIG, ROOM_TYPES, SUBJECT_TYPES } from './data/models';
-import { ALL_PRESETS, PRESET_ENGINEERING, PRESET_MECHANICAL, PRESET_BLANK_CANVAS, PRESET_IMPOSSIBLE_CONFLICTS, PRESET_TIGHT_RESOURCE } from './data/presets';
+import { DEFAULT_CONFIG, ROOM_TYPES } from './data/models';
+import { ALL_PRESETS, PRESET_ENGINEERING, PRESET_MECHANICAL, PRESET_TIGHT_RESOURCE } from './data/presets';
+import { AUTH_PROFILES, ROLES } from './data/authProfiles';
 import { checkFeasibility } from './solver/feasibilityChecker';
-import { generateTimetable } from './solver/timetableSolver';
 import { runGeneticAlgorithm } from './solver/geneticAlgorithmSolver';
-import { exportToCSV, exportToJSON, triggerPrint } from './utils/exportUtils';
+import { evaluateTimetable } from './solver/fitnessEvaluator';
+import { exportToCSV, exportToJSON } from './utils/exportUtils';
+import { CheckCircle2 } from 'lucide-react';
 import './App.css';
 
 export default function App() {
@@ -29,6 +35,22 @@ export default function App() {
     setTheme(next);
     document.documentElement.setAttribute('data-theme', next);
   };
+
+  // Campus User Profile State (Admin, Faculty, Student) - Starts at dedicated Login Page if null
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem('chronos_user_role');
+      if (saved) {
+        const found = AUTH_PROFILES.find(p => p.role === saved);
+        if (found) return found;
+      }
+    } catch (e) {
+      console.warn('Storage read error:', e);
+    }
+    return null; // Show Login Page when no active session
+  });
+
+  const [successToast, setSuccessToast] = useState(null);
 
   // Scenario Preset
   const [currentPresetId, setCurrentPresetId] = useState(PRESET_ENGINEERING.id);
@@ -62,6 +84,14 @@ export default function App() {
   const [aiAgentProgress, setAiAgentProgress] = useState(null);
   const [selectedSlotForEdit, setSelectedSlotForEdit] = useState(null);
 
+  // Manual Add Subject Modal State
+  const [isAddSubjectOpen, setIsAddSubjectOpen] = useState(false);
+  const [initialSlotForAdd, setInitialSlotForAdd] = useState(null);
+
+  // Lecture Inspection Details Modal (Student / Read-Only View)
+  const [isLectureDetailsOpen, setIsLectureDetailsOpen] = useState(false);
+  const [selectedLectureForDetails, setSelectedLectureForDetails] = useState(null);
+
   // Customized Print Settings
   const [printSettings, setPrintSettings] = useState({
     collegeName: 'APEX INSTITUTE OF TECHNOLOGY & ENGINEERING',
@@ -80,6 +110,13 @@ export default function App() {
     customNotes: 'Students must strictly follow laboratory safety protocols and wear prescribed laboratory coats in CL-01 and CL-02.',
     targetScope: 'current'
   });
+
+  const showToast = (message) => {
+    setSuccessToast(message);
+    setTimeout(() => {
+      setSuccessToast(null);
+    }, 4500);
+  };
 
   // Feasibility Check
   const feasibility = useMemo(() => {
@@ -154,12 +191,136 @@ export default function App() {
       setStats(result.stats);
       setQuality(result.quality);
       setUnallocated(result.unallocated || []);
+      showToast('Timetable generation complete!');
     } catch (err) {
       console.error('Solver error:', err);
     } finally {
       setIsSolving(false);
       setAiAgentProgress(null);
     }
+  };
+
+  // Authentication & Profile Handlers
+  const handleLoginSuccess = (profile) => {
+    setCurrentUser(profile);
+    try {
+      localStorage.setItem('chronos_user_role', profile.role);
+    } catch (e) {
+      console.warn('Storage write error:', e);
+    }
+
+    // Role-tailored initial views
+    if (profile.role === ROLES.STUDENT) {
+      setViewMode('division');
+      if (divisions.length > 0) {
+        setSelectedDivisionId(divisions[0].id);
+      }
+    } else if (profile.role === ROLES.FACULTY && profile.facultyId) {
+      if (faculty.some(f => f.id === profile.facultyId)) {
+        setSelectedFacultyId(profile.facultyId);
+      }
+    }
+
+    showToast(`Signed in as ${profile.name} (${profile.badgeLabel})`);
+  };
+
+  // Profile Switch Authentication Modal State
+  const [isSwitchAuthOpen, setIsSwitchAuthOpen] = useState(false);
+  const [targetSwitchRole, setTargetSwitchRole] = useState(null);
+
+  const handleSwitchProfile = (role) => {
+    if (role === currentUser?.role) return;
+    setTargetSwitchRole(role);
+    setIsSwitchAuthOpen(true);
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    try {
+      localStorage.removeItem('chronos_user_role');
+    } catch (e) {
+      console.warn('Storage clear error:', e);
+    }
+  };
+
+  // Manual Subject Addition Handlers
+  const handleOpenAddSubject = (prefillSlot = null) => {
+    if (!currentUser?.permissions?.canAddSubject) {
+      showToast('Student view is read-only. Login as Faculty or Admin to add subjects.');
+      return;
+    }
+    setInitialSlotForAdd(prefillSlot || {
+      day: config.days[0],
+      period: 1,
+      divisionId: selectedDivisionId || divisions[0]?.id,
+      facultyId: selectedFacultyId || faculty[0]?.id,
+      roomId: selectedRoomId || rooms[0]?.id
+    });
+    setIsAddSubjectOpen(true);
+  };
+
+  const handleEmptySlotClick = ({ day, period, divisionId, facultyId, roomId }) => {
+    if (!currentUser?.permissions?.canAddSubject) {
+      showToast('Student view is read-only. Login as Faculty or Admin to add subjects.');
+      return;
+    }
+    setInitialSlotForAdd({
+      day,
+      period,
+      divisionId: divisionId || selectedDivisionId || divisions[0]?.id,
+      facultyId: facultyId || selectedFacultyId || faculty[0]?.id,
+      roomId: roomId || selectedRoomId || rooms[0]?.id
+    });
+    setIsAddSubjectOpen(true);
+  };
+
+  const handleAddSubjectSubmit = (newSlotData) => {
+    let finalSubjectId = newSlotData.subjectId;
+    let currentSubjectsList = [...subjects];
+
+    // If custom ad-hoc subject was specified, register it in state
+    if (newSlotData.customSubject) {
+      const newSub = {
+        ...newSlotData.customSubject,
+        divisionId: newSlotData.divisionId,
+        facultyId: newSlotData.facultyId,
+        weeklySessions: 1
+      };
+      currentSubjectsList = [...subjects, newSub];
+      setSubjects(currentSubjectsList);
+      finalSubjectId = newSub.id;
+    }
+
+    const newSlot = {
+      id: `slot_manual_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+      unitId: `manual_${Date.now()}`,
+      subjectId: finalSubjectId,
+      divisionId: newSlotData.divisionId,
+      facultyId: newSlotData.facultyId,
+      roomId: newSlotData.roomId,
+      day: newSlotData.day,
+      period: newSlotData.period,
+      duration: newSlotData.duration || 1,
+      isManual: true,
+      notes: newSlotData.notes || ''
+    };
+
+    setTimetable(prev => {
+      const updated = [...prev, newSlot];
+      const newQuality = evaluateTimetable(updated, {
+        divisions,
+        rooms,
+        faculty,
+        subjects: currentSubjectsList,
+        config
+      });
+      setQuality(newQuality);
+      return updated;
+    });
+
+    const targetDiv = divisions.find(d => d.id === newSlotData.divisionId);
+    const targetSub = currentSubjectsList.find(s => s.id === finalSubjectId);
+    showToast(`Added ${targetSub?.name || 'Subject'} to ${targetDiv?.shortCode || 'classroom'} on ${newSlotData.day} Period ${newSlotData.period}!`);
   };
 
   // Apply Data Extracted or Built by AI Agent
@@ -179,7 +340,6 @@ export default function App() {
     if (newFac[0]) setSelectedFacultyId(newFac[0].id);
     if (newRooms[0]) setSelectedRoomId(newRooms[0].id);
 
-    // Update print settings department title
     if (dataset.department) {
       setPrintSettings(prev => ({
         ...prev,
@@ -187,7 +347,6 @@ export default function App() {
       }));
     }
 
-    // Immediately trigger evolutionary schedule solver
     handleGenerate({
       divisions: newDivs,
       rooms: newRooms,
@@ -230,7 +389,6 @@ export default function App() {
   // Auto-Fix Constraints
   const handleApplyAutoFix = (fix) => {
     if (fix.actionType === 'REDUCE_DIVISION_SESSIONS') {
-      // Reduce sessions of lowest priority subjects
       const updatedSubjects = [...subjects];
       let remainingToTrim = fix.excessCount;
       for (let i = updatedSubjects.length - 1; i >= 0 && remainingToTrim > 0; i--) {
@@ -277,18 +435,39 @@ export default function App() {
 
   // Handle Slot Move from Modal
   const handleSaveSlotMove = ({ slotId, day, period, roomId }) => {
-    setTimetable(prev => prev.map(s => {
-      if (s.id === slotId) {
-        return { ...s, day, period, roomId };
-      }
-      return s;
-    }));
+    setTimetable(prev => {
+      const updated = prev.map(s => {
+        if (s.id === slotId) {
+          return { ...s, day, period, roomId };
+        }
+        return s;
+      });
+      const newQuality = evaluateTimetable(updated, { divisions, rooms, faculty, subjects, config });
+      setQuality(newQuality);
+      return updated;
+    });
+    showToast('Session rescheduled successfully!');
   };
 
   // Handle Slot Delete
   const handleDeleteSlot = (slotId) => {
-    setTimetable(prev => prev.filter(s => s.id !== slotId));
+    setTimetable(prev => {
+      const updated = prev.filter(s => s.id !== slotId);
+      const newQuality = evaluateTimetable(updated, { divisions, rooms, faculty, subjects, config });
+      setQuality(newQuality);
+      return updated;
+    });
+    showToast('Session removed from timetable.');
   };
+
+  // Dedicated Campus Login Gateway if not authenticated
+  if (!currentUser) {
+    return (
+      <div className="app-container" data-theme={theme}>
+        <LoginPage onLoginSuccess={handleLoginSuccess} />
+      </div>
+    );
+  }
 
   return (
     <div className="app-container">
@@ -310,6 +489,10 @@ export default function App() {
         hasTimetable={timetable.length > 0}
         theme={theme}
         onToggleTheme={handleToggleTheme}
+        currentUser={currentUser}
+        onSwitchProfile={handleSwitchProfile}
+        onLogout={handleLogout}
+        onOpenAddSubject={() => handleOpenAddSubject()}
       />
 
       {/* Main Content Area */}
@@ -340,6 +523,8 @@ export default function App() {
               setSelectedFacultyId={setSelectedFacultyId}
               selectedRoomId={selectedRoomId}
               setSelectedRoomId={setSelectedRoomId}
+              currentUser={currentUser}
+              onOpenAddSubject={() => handleOpenAddSubject()}
             />
 
             {/* Calendar Matrix Timetable Grid */}
@@ -354,11 +539,21 @@ export default function App() {
               selectedDivisionId={selectedDivisionId}
               selectedFacultyId={selectedFacultyId}
               selectedRoomId={selectedRoomId}
-              onSlotClick={(slot) => setSelectedSlotForEdit(slot)}
-              onEmptySlotClick={({ day, period, divisionId }) => {
-                console.log('Empty slot clicked:', day, period, divisionId);
+              onSlotClick={(slot) => {
+                if (currentUser?.role === ROLES.STUDENT) {
+                  setSelectedLectureForDetails(slot);
+                  setIsLectureDetailsOpen(true);
+                } else {
+                  setSelectedSlotForEdit(slot);
+                }
               }}
+              onViewLecture={(slot) => {
+                setSelectedLectureForDetails(slot);
+                setIsLectureDetailsOpen(true);
+              }}
+              onEmptySlotClick={handleEmptySlotClick}
               unallocated={unallocated}
+              currentUser={currentUser}
             />
           </>
         )}
@@ -374,6 +569,57 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* Success Notification Toast */}
+      {successToast && (
+        <div className="app-success-toast">
+          <CheckCircle2 size={16} className="text-success" />
+          <span>{successToast}</span>
+        </div>
+      )}
+
+      {/* Manual Subject Addition Modal (Faculty / Principal) */}
+      <AddSubjectModal
+        isOpen={isAddSubjectOpen}
+        onClose={() => setIsAddSubjectOpen(false)}
+        initialSlot={initialSlotForAdd}
+        timetable={timetable}
+        divisions={divisions}
+        rooms={rooms}
+        faculty={faculty}
+        subjects={subjects}
+        config={config}
+        currentUser={currentUser}
+        onAddSubject={handleAddSubjectSubmit}
+      />
+
+      {/* Lecture Details Modal (Read-Only / Student Inspection) */}
+      <LectureDetailsModal
+        isOpen={isLectureDetailsOpen}
+        onClose={() => setIsLectureDetailsOpen(false)}
+        slot={selectedLectureForDetails}
+        timetable={timetable}
+        divisions={divisions}
+        rooms={rooms}
+        faculty={faculty}
+        subjects={subjects}
+        config={config}
+        currentUser={currentUser}
+        onOpenReschedule={(slot) => {
+          setSelectedSlotForEdit(slot);
+        }}
+      />
+
+      {/* Profile Switch Credential Verification Modal */}
+      <SwitchProfileAuthModal
+        isOpen={isSwitchAuthOpen}
+        onClose={() => setIsSwitchAuthOpen(false)}
+        targetRole={targetSwitchRole}
+        currentRole={currentUser?.role}
+        onConfirmSwitch={(authenticatedProfile) => {
+          handleLoginSuccess(authenticatedProfile);
+        }}
+      />
 
       {/* Autonomous AI Agent Assistant Modal */}
       <AIAgentAssistantModal

@@ -14,10 +14,14 @@ export default function TimetableGrid({
   selectedFacultyId,
   selectedRoomId,
   onSlotClick,
+  onViewLecture,
   onEmptySlotClick,
-  unallocated = []
+  unallocated = [],
+  currentUser
 }) {
   const [searchQuery, setSearchQuery] = useState('');
+  const canAdd = currentUser?.permissions?.canAddSubject ?? true;
+  const isStudent = currentUser?.role === 'student';
 
   const divisionMap = new Map(divisions.map(d => [d.id, d]));
   const roomMap = new Map(rooms.map(r => [r.id, r]));
@@ -177,16 +181,18 @@ export default function TimetableGrid({
                                   room={roomMap.get(match.slot.roomId)}
                                   division={div}
                                   isContinuation={match.isContinuation}
-                                  onClick={() => onSlotClick(match.slot)}
+                                  onClick={() => isStudent ? (onViewLecture ? onViewLecture(match.slot) : onSlotClick(match.slot)) : onSlotClick(match.slot)}
                                   showDivision={false}
                                   searchQuery={searchQuery}
                                 />
                               ) : (
                                 <div
-                                  className="empty-slot"
-                                  onClick={() => onEmptySlotClick({ day, period: p.index, divisionId: div.id })}
+                                  className={`empty-slot ${canAdd ? 'can-add' : 'student-view'}`}
+                                  onClick={() => canAdd && onEmptySlotClick({ day, period: p.index, divisionId: div.id })}
+                                  title={canAdd ? `Click '+' to add a subject for ${div.shortCode} on ${day} Period ${p.index}` : "Free self-study period"}
                                 >
                                   <span className="empty-text">Free</span>
+                                  {canAdd && <PlusCircle size={13} className="empty-add-icon" />}
                                 </div>
                               )}
                             </td>
@@ -290,17 +296,24 @@ export default function TimetableGrid({
                               room={roomMap.get(match.slot.roomId)}
                               division={divisionMap.get(match.slot.divisionId)}
                               isContinuation={match.isContinuation}
-                              onClick={() => onSlotClick(match.slot)}
+                              onClick={() => isStudent ? (onViewLecture ? onViewLecture(match.slot) : onSlotClick(match.slot)) : onSlotClick(match.slot)}
                               showDivision={viewMode !== 'division'}
                               searchQuery={searchQuery}
                             />
                           ) : (
                             <div
-                              className="empty-slot"
-                              onClick={() => onEmptySlotClick({ day, period: p.index })}
+                              className={`empty-slot ${canAdd ? 'can-add' : 'student-view'}`}
+                              onClick={() => canAdd && onEmptySlotClick({ 
+                                day, 
+                                period: p.index,
+                                divisionId: viewMode === 'division' ? selectedDivisionId : null,
+                                facultyId: viewMode === 'faculty' ? selectedFacultyId : null,
+                                roomId: viewMode === 'room' ? selectedRoomId : null
+                              })}
+                              title={canAdd ? `Click '+' to manually add a subject on ${day} Period ${p.index}` : "Free self-study period"}
                             >
                               <span className="empty-text">Free</span>
-                              <PlusCircle size={13} className="empty-add-icon" />
+                              {canAdd && <PlusCircle size={13} className="empty-add-icon" />}
                             </div>
                           )}
                         </td>

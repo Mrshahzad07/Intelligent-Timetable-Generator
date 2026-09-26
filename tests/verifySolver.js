@@ -4,7 +4,7 @@ import { DEFAULT_CONFIG } from '../src/data/models.js';
 import { checkFeasibility } from '../src/solver/feasibilityChecker.js';
 import { generateTimetable } from '../src/solver/timetableSolver.js';
 import { evaluateTimetable } from '../src/solver/fitnessEvaluator.js';
-import { validateSlotMove } from '../src/solver/conflictValidator.js';
+import { validateSlotMove, validateNewSlot } from '../src/solver/conflictValidator.js';
 
 let totalTests = 0;
 let passedTests = 0;
@@ -147,6 +147,32 @@ async function runTestSuite() {
 
     assert(conflictResult.isValid === false, 'Validator correctly flags conflict when moving into an occupied slot');
     assert(conflictResult.conflicts.length > 0, `Validator returns specific conflict messages: "${conflictResult.conflicts[0]?.message}"`);
+  }
+
+  // Test 6: Manual Subject Addition Conflict Validation
+  console.log('\n--- 6. Manual Subject Addition Validation (Add Subject) ---');
+  if (slots.length >= 1) {
+    const occupiedSlot = slots[0];
+
+    // Attempting to add a new slot at the exact same time/room as an existing class
+    const addConflictResult = validateNewSlot({
+      divisionId: PRESET_ENGINEERING.divisions[0].id,
+      subjectId: PRESET_ENGINEERING.subjects[0].id,
+      facultyId: PRESET_ENGINEERING.faculty[0].id,
+      roomId: occupiedSlot.roomId,
+      day: occupiedSlot.day,
+      period: occupiedSlot.period,
+      duration: 1,
+      timetable: slots,
+      divisions: PRESET_ENGINEERING.divisions,
+      rooms: PRESET_ENGINEERING.rooms,
+      faculty: PRESET_ENGINEERING.faculty,
+      subjects: PRESET_ENGINEERING.subjects,
+      config: DEFAULT_CONFIG
+    });
+
+    assert(addConflictResult.isValid === false, 'Validator catches collision when manually adding to an occupied classroom/time');
+    assert(addConflictResult.conflicts.length > 0, `Collision warning caught: "${addConflictResult.conflicts[0]?.message}"`);
   }
 
   // Summary

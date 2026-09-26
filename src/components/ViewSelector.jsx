@@ -8,7 +8,8 @@ import {
   Clock, 
   CheckCircle,
   FlaskConical,
-  Award
+  Award,
+  PlusCircle
 } from 'lucide-react';
 
 export default function ViewSelector({
@@ -24,7 +25,9 @@ export default function ViewSelector({
   selectedFacultyId,
   setSelectedFacultyId,
   selectedRoomId,
-  setSelectedRoomId
+  setSelectedRoomId,
+  currentUser,
+  onOpenAddSubject
 }) {
   const currentDivision = divisions.find(d => d.id === selectedDivisionId);
   const currentFaculty = faculty.find(f => f.id === selectedFacultyId);
@@ -111,6 +114,24 @@ export default function ViewSelector({
             <LayoutGrid size={17} />
             <span>Master Matrix</span>
           </button>
+        </div>
+
+        <div className="view-selector-actions">
+          {currentUser?.permissions?.canAddSubject && (
+            <button
+              className="btn btn-add-subject-cta"
+              onClick={() => onOpenAddSubject()}
+              title="Manually add a subject session for this classroom"
+            >
+              <PlusCircle size={15} />
+              <span>+ Add Subject to Classroom</span>
+            </button>
+          )}
+          {currentUser?.role === 'student' && (
+            <div className="student-badge-pill">
+              <span>🎓 Viewing as <strong>{currentUser.name}</strong> ({currentUser.studentRoll || 'CS-A'})</span>
+            </div>
+          )}
         </div>
       </div>
 
